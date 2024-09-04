@@ -1,0 +1,93 @@
+#breadcrumb: 2022-02-22T22:22:22.000000000+0900 (PID=1111) /c/Users/user1/test.sh >> Main
+
+Hint:
+    You can this test cases in this file by searching "TestCase".
+(TestCase-Main) Empty line
+
+(TestCase-Main) The case that first line is tag.
+This file extension must not be ".log", because .gitignore ignores ".log" files.
+#breadcrumb: 2022-02-22T22:22:22.000000000+0900 (PID=1111) /c/Users/user1/sub.sh >> Main >> Main
+log 1:
+#breadcrumb: 2022-02-22T22:22:22.000000000+0900 (PID=1111) /c/Users/user1/sub.sh >> Main >> Main >> Sub
+log 1-1a: (TestCase-Main) Depth == 2
+log 1-1b: (TestCase-Main) No log between end tag (Main) and start tag (Main2)
+#breadcrumb: 2022-02-22T22:22:22.000000000+0900 (PID=1111) /c/Users/user1/sub.sh >> Main >> Main >> Sub (end)
+#breadcrumb: 2022-02-22T22:22:22.000000000+0900 (PID=1111) /c/Users/user1/sub.sh >> Main >> Main (end)
+#breadcrumb: 2022-02-22T22:22:22.000000000+0900 (PID=1111) /c/Users/user1/sub.sh >> Main >> Main2
+log 2:
+#breadcrumb: 2022-02-22T22:22:22.000000000+0900 (PID=1111) /c/Users/user1/sub.sh >> Main >> Main2 (end)
+log 3: (TestCase-Main) No breadcrumb
+#breadcrumb: Step in Main3 (PID=1111)
+#breadcrumb: 2022-02-22T22:22:22.000000000+0900 (PID=1111) /c/Users/user1/sub.sh >> Main >> Main3
+#breadcrumb: 2022-02-22T22:22:22.000000000+0900 (PID=1111) /c/Users/user1/sub.sh >> Main >> Main3 (end)
+    log 4a: (TestCase-Main) Indent at first line in log block.
+log 4b:
+#breadcrumb: 2022-02-22T22:22:22.000000000+0900 (PID=1111) /c/Users/user1/sub.sh >> Main (end)
+log 4c:
+#breadcrumb: 2022-02-22T22:22:22.000000000+0900 (PID=1111) /c/Users/user1/sub.sh >> WithoutEnd
+#breadcrumb: 2022-02-22T22:22:22.000000000+0900 (PID=1111) /c/Users/user1/sub.sh >> WithoutEnd >> SetBreadcrumb1
+(TestCase-WithoutEnd) without (end)
+#breadcrumb: 2022-02-22T22:22:22.000000000+0900 (PID=1111) /c/Users/user1/sub.sh >> WithoutEnd >> SetBreadcrumb2
+#breadcrumb: 2022-02-22T22:22:22.000000000+0900 (PID=1111) /c/Users/user1/sub.sh >> WithoutEnd >> SetBreadcrumb333(longer)
+#breadcrumb: 2022-02-22T22:22:22.000000000+0900 (PID=1111) /c/Users/user1/sub.sh >> WithoutEnd >> SetBreadcrumb4
+#breadcrumb: 2022-02-22T22:22:22.000000000+0900 (PID=1111) /c/Users/user1/sub.sh >> WithoutEnd (end)
+#breadcrumb: 2022-02-22T22:22:22.000000000+0900 (PID=1111) /c/Users/user1/sub.sh >> DoubleLevelEnd
+(TestCase-DoubleLevelEnd) double level end to root
+#breadcrumb: 2022-02-22T22:22:22.000000000+0900 (PID=1111) /c/Users/user1/sub.sh >> DoubleLevelEnd >> Main
+#breadcrumb: 2022-02-22T22:22:22.000000000+0900 (PID=1111) /c/Users/user1/sub.sh >> DoubleLevelEnd >> Main >> Sub
+#breadcrumb: 2022-02-22T22:22:22.000000000+0900 (PID=1111) /c/Users/user1/sub.sh >> DoubleLevelEnd >> Main >> Sub (end)
+#breadcrumb: 2022-02-22T22:22:22.000000000+0900 (PID=1111) /c/Users/user1/sub.sh >> DoubleLevelEnd (end)
+log 5:
+#breadcrumb: 2022-02-22T22:22:22.000000000+0900 (PID=1111) /c/Users/user1/sub.sh >> DoubleLevelEnd2
+(TestCase-DoubleLevelEnd2) double level end to level 1
+#breadcrumb: 2022-02-22T22:22:22.000000000+0900 (PID=1111) /c/Users/user1/sub.sh >> DoubleLevelEnd2 >> Main
+#breadcrumb: 2022-02-22T22:22:22.000000000+0900 (PID=1111) /c/Users/user1/sub.sh >> DoubleLevelEnd2 >> Main >> Sub
+#breadcrumb: 2022-02-22T22:22:22.000000000+0900 (PID=1111) /c/Users/user1/sub.sh >> DoubleLevelEnd2 >> Main >> Sub >> Sub2
+#breadcrumb: 2022-02-22T22:22:22.000000000+0900 (PID=1111) /c/Users/user1/sub.sh >> DoubleLevelEnd2 >> Main >> Sub >> Sub2 (end)
+log 1
+#breadcrumb: 2022-02-22T22:22:22.000000000+0900 (PID=1111) /c/Users/user1/sub.sh >> DoubleLevelEnd2 >> Main (end)
+log 2
+#breadcrumb: 2022-02-22T22:22:22.000000000+0900 (PID=1111) /c/Users/user1/sub.sh >> DoubleLevelEnd2 (end)
+#breadcrumb: 2022-02-22T22:22:22.000000000+0900 (PID=1111) /c/Users/user1/main.sh >> ChildProcess1
+(TestCase-ChildProcess1) Interrupting child process
+#breadcrumb: 2022-02-22T22:22:22.000000000+0900 (PID=1111) /c/Users/user1/main.sh >> ChildProcess1 >> Main
+#breadcrumb: 2022-02-22T22:22:22.000000000+0900 (PID=2222, ParentPID=1111) /c/Users/user1/sub.sh >> Main
+#breadcrumb: 2022-02-22T22:22:22.000000000+0900 (PID=1111) /c/Users/user1/main.sh >> ChildProcess1 >> Main >> Sub
+#breadcrumb: 2022-02-22T22:22:22.000000000+0900 (PID=2222, ParentPID=1111) /c/Users/user1/sub.sh >> Main (end)
+#breadcrumb: 2022-02-22T22:22:22.000000000+0900 (PID=1111) /c/Users/user1/main.sh >> ChildProcess1 >> Main >> Sub (end)
+#breadcrumb: 2022-02-22T22:22:22.000000000+0900 (PID=1111) /c/Users/user1/main.sh >> ChildProcess1 >> Main (end)
+#breadcrumb: 2022-02-22T22:22:22.000000000+0900 (PID=1111) /c/Users/user1/main.sh >> ChildProcess1 (end)
+#breadcrumb: 2022-02-22T22:22:22.000000000+0900 (PID=1111) /c/Users/user1/main.sh >> ChildProcess2
+(TestCase-ChildProcess2) Interrupting child processes
+#breadcrumb: 2022-02-22T22:22:22.000000000+0900 (PID=1111) /c/Users/user1/main.sh >> ChildProcess2 >> Main
+#breadcrumb: 2022-02-22T22:22:22.000000000+0900 (PID=1111) /c/Users/user1/main.sh >> ChildProcess2 >> Main >> Sub
+#breadcrumb: 2022-02-22T22:22:22.000000000+0900 (PID=2222, ParentPID=1111) /c/Users/user1/sub.sh >> Main
+(TestCase-ChildProcess2) Change "ChildProcessRootLogIndent"
+PID=2222: log 21
+#breadcrumb: 2022-02-22T22:22:22.000000000+0900 (PID=2222, ParentPID=1111) /c/Users/user1/sub.sh >> Main >> Sub
+PID=2222: log 22
+#breadcrumb: 2022-02-22T22:22:22.000000000+0900 (PID=2222, ParentPID=1111) /c/Users/user1/sub.sh >> Main >> Sub >> Sub11
+PID=2222: log 23
+#breadcrumb: 2022-02-22T22:22:22.000000000+0900 (PID=1111) /c/Users/user1/main.sh >> ChildProcess2 >> Main >> Sub >> Sub2
+#breadcrumb: 2022-02-22T22:22:22.000000000+0900 (PID=2222, ParentPID=1111) /c/Users/user1/sub.sh >> Main >> Sub >> Sub11 >> Sub12
+(TestCase-ChildProcess2) Resume indent
+PID=2222: log 24
+#breadcrumb: 2022-02-22T22:22:22.000000000+0900 (PID=2222, ParentPID=1111) /c/Users/user1/sub.sh >> Main >> Sub >> Sub11 >> Sub12 (end)
+#breadcrumb: 2022-02-22T22:22:22.000000000+0900 (PID=2222, ParentPID=1111) /c/Users/user1/sub.sh >> Main >> Sub >> Sub11 (end)
+#breadcrumb: 2022-02-22T22:22:22.000000000+0900 (PID=1111) /c/Users/user1/main.sh >> ChildProcess2 >> Main >> Sub >> Sub2 >> Sub3
+#breadcrumb: 2022-02-22T22:22:22.000000000+0900 (PID=1111) /c/Users/user1/main.sh >> ChildProcess2 >> Main >> Sub >> Sub2 >> Sub3 >> Sub4
+PID=1111: log 1
+PID=2222: log 25
+#breadcrumb: 2022-02-22T22:22:22.000000000+0900 (PID=2222, ParentPID=1111) /c/Users/user1/sub.sh >> Main >> Sub >> Sub2
+PID=2222: log 26
+PID=1111: log 2
+#breadcrumb: 2022-02-22T22:22:22.000000000+0900 (PID=1111) /c/Users/user1/main.sh >> ChildProcess2 >> Main >> Sub >> Sub2 >> Sub3 >> Sub4 (end)
+#breadcrumb: 2022-02-22T22:22:22.000000000+0900 (PID=1111) /c/Users/user1/main.sh >> ChildProcess2 >> Main >> Sub >> Sub2 >> Sub3 (end)
+#breadcrumb: 2022-02-22T22:22:22.000000000+0900 (PID=2222, ParentPID=1111) /c/Users/user1/sub.sh >> Main >> Sub >> Sub2 (end)
+#breadcrumb: 2022-02-22T22:22:22.000000000+0900 (PID=2222, ParentPID=1111) /c/Users/user1/sub.sh >> Main >> Sub (end)
+#breadcrumb: 2022-02-22T22:22:22.000000000+0900 (PID=1111) /c/Users/user1/main.sh >> ChildProcess2 >> Main >> Sub >> Sub2 (end)
+#breadcrumb: 2022-02-22T22:22:22.000000000+0900 (PID=1111) /c/Users/user1/main.sh >> ChildProcess2 >> Main >> Sub (end)
+#breadcrumb: 2022-02-22T22:22:22.000000000+0900 (PID=1111) /c/Users/user1/main.sh >> ChildProcess2 >> Main (end)
+#breadcrumb: 2022-02-22T22:22:22.000000000+0900 (PID=1111) /c/Users/user1/main.sh >> ChildProcess2 (end)
+#breadcrumb: 2022-02-22T22:22:22.000000000+0900 (PID=2222, ParentPID=1111) /c/Users/user1/sub.sh >> Main (end)
+log 9:

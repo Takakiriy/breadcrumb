@@ -1,0 +1,5 @@
+#breadcrumb: 2022-02-22T22:22:22.000000000+0900 (PID=1111) /c/Users/user1/test.sh >> Main
+CR+LF line
+LF line
+CR line
+(end)

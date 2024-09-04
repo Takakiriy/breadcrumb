@@ -1,0 +1,21 @@
+Test:
+    Command:  #// Run example and test
+        New terminal - set up and start background tasks:
+            npm ci
+            node_modules/typescript/bin/tsc --watch
+        New terminal - support_node.cjs:
+            node src/support_node.cjs
+        Run app:
+            node build/tree-breadcrumb.js
+        Run test:
+            cd  src
+            node ../build/test.js
+            cd  ..
+        (If necessary) Set up for 2nd try:
+            rm -rf build
+            rm -rf node_modules
+    Code:
+        main (test):  #ref: src/test.ts
+            # async function  main() {  // Test main
+        main (application):  #ref: src/test.ts
+            # async function  main() {  // Application

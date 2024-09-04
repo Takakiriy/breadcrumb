@@ -1,0 +1,13 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug",
+            "type": "bashdb",
+            "request": "launch",
+            "program": "${workspaceFolder}/breadcrumb.sh",
+            "cwd": "${workspaceFolder}",
+            "args": []
+        }
+    ]
+}

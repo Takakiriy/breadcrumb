@@ -1,0 +1,166 @@
+#breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=1111) ./breadcrumb.sh >> Main
+#breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=1111) ./breadcrumb.sh >> Main >> Tests
+#breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=1111) ./breadcrumb.sh >> Main >> Tests >> TestOfExample2
+Do in TestOfExample2
+#breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=1111) ./breadcrumb.sh >> Main >> Tests >> TestOfExample2 (end)
+#breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=1111) ./breadcrumb.sh >> Main >> Tests >> TestOfExample3
+Do in TestOfExample3
+#breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=1111) ./breadcrumb.sh >> Main >> Tests >> TestOfExample3 (end)
+#breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=1111) ./breadcrumb.sh >> Main >> Tests >> TestOfExample4
+#breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=1111) ./breadcrumb.sh >> Main >> Tests >> TestOfExample4 >> o1
+Do in TestOfExample4 a
+#breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=1111) ./breadcrumb.sh >> Main >> Tests >> TestOfExample4 >> o1 (end)
+#breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=1111) ./breadcrumb.sh >> Main >> Tests >> TestOfExample4 >> o0
+Do in TestOfExample4 b
+#breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=1111) ./breadcrumb.sh >> Main >> Tests >> TestOfExample4 >> o0 (end)
+#breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=1111) ./breadcrumb.sh >> Main >> Tests >> TestOfExample4 >> a1
+Do in TestOfExample4 a
+#breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=1111) ./breadcrumb.sh >> Main >> Tests >> TestOfExample4 >> a1 (end)
+#breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=1111) ./breadcrumb.sh >> Main >> Tests >> TestOfExample4 >> a0
+#breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=1111) ./breadcrumb.sh >> Main >> Tests >> TestOfExample4 >> a0 (end)
+#breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=1111) ./breadcrumb.sh >> Main >> Tests >> TestOfExample4 (end)
+#breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=1111) ./breadcrumb.sh >> Main >> Tests >> TestOfStartAt1
+#breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=1111) ./breadcrumb.sh >> Main >> Tests >> TestOfStartAt1 >> StartAtTarget2
+******* Test of --start-at " >> Main >> StartAtTarget2"
+#breadcrumb: Step in Main (PID=1111)
+#breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=1111) ./breadcrumb.sh >> Main
+#breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=1111) ./breadcrumb.sh >> Main >> StartAtTarget1
+#breadcrumb: Skipped until StartAtTarget2 (PID=1111)
+#breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=1111) ./breadcrumb.sh >> Main >> StartAtTarget1 (end)
+#breadcrumb: Step in StartAtTarget2 (PID=1111)
+#breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=1111) ./breadcrumb.sh >> Main >> StartAtTarget2
+Do in StartAtTarget2
+#breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=1111) ./breadcrumb.sh >> Main >> StartAtTarget2 (end)
+#breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=1111) ./breadcrumb.sh >> Main >> StartAtTarget3
+Do in StartAtTarget3
+#breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=1111) ./breadcrumb.sh >> Main >> StartAtTarget3 (end)
+#breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=1111) ./breadcrumb.sh >> Main (end)
+#breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=1111) ./breadcrumb.sh >> Main >> Tests >> TestOfStartAt1 >> StartAtTarget2 (end)
+#breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=1111) ./breadcrumb.sh >> Main >> Tests >> TestOfStartAt1 >> StartAtTarget1
+******* Test of --start-at " >> Main >> StartAtTarget1"
+#breadcrumb: Step in Main (PID=1111)
+#breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=1111) ./breadcrumb.sh >> Main
+#breadcrumb: Step in StartAtTarget1 (PID=1111)
+#breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=1111) ./breadcrumb.sh >> Main >> StartAtTarget1
+Do in StartAtTarget1
+#breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=1111) ./breadcrumb.sh >> Main >> StartAtTarget1 (end)
+#breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=1111) ./breadcrumb.sh >> Main >> StartAtTarget2
+Do in StartAtTarget2
+#breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=1111) ./breadcrumb.sh >> Main >> StartAtTarget2 (end)
+#breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=1111) ./breadcrumb.sh >> Main >> StartAtTarget3
+Do in StartAtTarget3
+#breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=1111) ./breadcrumb.sh >> Main >> StartAtTarget3 (end)
+#breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=1111) ./breadcrumb.sh >> Main (end)
+#breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=1111) ./breadcrumb.sh >> Main >> Tests >> TestOfStartAt1 >> StartAtTarget1 (end)
+#breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=1111) ./breadcrumb.sh >> Main >> Tests >> TestOfStartAt1 >> StartAtTarget3
+******* Test of --start-at " >> Main >> StartAtTarget3"
+#breadcrumb: Step in Main (PID=1111)
+#breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=1111) ./breadcrumb.sh >> Main
+#breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=1111) ./breadcrumb.sh >> Main >> StartAtTarget1
+#breadcrumb: Skipped until StartAtTarget3 (PID=1111)
+#breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=1111) ./breadcrumb.sh >> Main >> StartAtTarget1 (end)
+#breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=1111) ./breadcrumb.sh >> Main >> StartAtTarget2
+#breadcrumb: Skipped until StartAtTarget3 (PID=1111)
+#breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=1111) ./breadcrumb.sh >> Main >> StartAtTarget2 (end)
+#breadcrumb: Step in StartAtTarget3 (PID=1111)
+#breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=1111) ./breadcrumb.sh >> Main >> StartAtTarget3
+Do in StartAtTarget3
+#breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=1111) ./breadcrumb.sh >> Main >> StartAtTarget3 (end)
+#breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=1111) ./breadcrumb.sh >> Main (end)
+#breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=1111) ./breadcrumb.sh >> Main >> Tests >> TestOfStartAt1 >> StartAtTarget3 (end)
+#breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=1111) ./breadcrumb.sh >> Main >> Tests >> TestOfStartAt1 >> NotFoundCase
+******* Test of --start-at " >> Main >> NotFoundCase"
+#breadcrumb: Step in Main (PID=1111)
+#breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=1111) ./breadcrumb.sh >> Main
+#breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=1111) ./breadcrumb.sh >> Main >> StartAtTarget1
+#breadcrumb: Skipped until NotFoundCase (PID=1111)
+#breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=1111) ./breadcrumb.sh >> Main >> StartAtTarget1 (end)
+#breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=1111) ./breadcrumb.sh >> Main >> StartAtTarget2
+#breadcrumb: Skipped until NotFoundCase (PID=1111)
+#breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=1111) ./breadcrumb.sh >> Main >> StartAtTarget2 (end)
+#breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=1111) ./breadcrumb.sh >> Main >> StartAtTarget3
+#breadcrumb: Skipped until NotFoundCase (PID=1111)
+#breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=1111) ./breadcrumb.sh >> Main >> StartAtTarget3 (end)
+#breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=1111) ./breadcrumb.sh >> Main (end)
+ERROR: Breadcrumb "NotFoundCase" in --start-at " >> Main >> NotFoundCase" is not matched with any PushBreadcrumb parameter.  #breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=1111) ./breadcrumb.sh
+OK. It is error case test.
+#breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=1111) ./breadcrumb.sh >> Main >> Tests >> TestOfStartAt1 >> NotFoundCase (end)
+#breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=1111) ./breadcrumb.sh >> Main >> Tests >> TestOfStartAt1 (end)
+#breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=1111) ./breadcrumb.sh >> Main >> Tests >> TestOfStartAtSubProcess
+#breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=1111) ./breadcrumb.sh >> Main >> Tests >> TestOfStartAtSubProcess >> FirstCase
+******* Test of --start-at " >> Main >> StartAtTargetB2 >> Main >> StartAtTarget2"
+#breadcrumb: Step in Main (PID=1111)
+#breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=1111) ./breadcrumb.sh >> Main
+#breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=1111) ./breadcrumb.sh >> Main >> StartAtTargetB1
+#breadcrumb: Skipped until StartAtTargetB2 >> Main >> StartAtTarget2 (PID=1111)
+#breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=1111) ./breadcrumb.sh >> Main >> StartAtTargetB1 (end)
+#breadcrumb: Step in StartAtTargetB2 (PID=1111)
+#breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=1111) ./breadcrumb.sh >> Main >> StartAtTargetB2
+#breadcrumb: Step in Main (PID=2222, ParentPID=1111)
+#breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=2222, ParentPID=1111) ./breadcrumb.sh >> Main >> StartAtTargetB2 >> Main
+#breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=2222, ParentPID=1111) ./breadcrumb.sh >> Main >> StartAtTargetB2 >> Main >> StartAtTarget1
+#breadcrumb: Skipped until StartAtTarget2 (PID=2222, ParentPID=1111)
+#breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=2222, ParentPID=1111) ./breadcrumb.sh >> Main >> StartAtTargetB2 >> Main >> StartAtTarget1 (end)
+#breadcrumb: Step in StartAtTarget2 (PID=2222, ParentPID=1111)
+#breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=2222, ParentPID=1111) ./breadcrumb.sh >> Main >> StartAtTargetB2 >> Main >> StartAtTarget2
+Do in StartAtTarget2
+#breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=2222, ParentPID=1111) ./breadcrumb.sh >> Main >> StartAtTargetB2 >> Main >> StartAtTarget2 (end)
+#breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=2222, ParentPID=1111) ./breadcrumb.sh >> Main >> StartAtTargetB2 >> Main >> StartAtTarget3
+Do in StartAtTarget3
+#breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=2222, ParentPID=1111) ./breadcrumb.sh >> Main >> StartAtTargetB2 >> Main >> StartAtTarget3 (end)
+#breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=2222, ParentPID=1111) ./breadcrumb.sh >> Main >> StartAtTargetB2 >> Main (end)
+#breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=1111) ./breadcrumb.sh >> Main >> StartAtTargetB2 (end)
+#breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=1111) ./breadcrumb.sh >> Main >> StartAtTargetB3
+Do in StartAtTargetB3
+#breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=1111) ./breadcrumb.sh >> Main >> StartAtTargetB3 (end)
+#breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=1111) ./breadcrumb.sh >> Main (end)
+#breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=1111) ./breadcrumb.sh >> Main >> Tests >> TestOfStartAtSubProcess >> FirstCase (end)
+#breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=1111) ./breadcrumb.sh >> Main >> Tests >> TestOfStartAtSubProcess >> NotFoundCase
+******* Test of --start-at " >> Main >> StartAtTargetB2 >> Main >> NotFoundCase"
+#breadcrumb: Step in Main (PID=1111)
+#breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=1111) ./breadcrumb.sh >> Main
+#breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=1111) ./breadcrumb.sh >> Main >> StartAtTargetB1
+#breadcrumb: Skipped until StartAtTargetB2 >> Main >> NotFoundCase (PID=1111)
+#breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=1111) ./breadcrumb.sh >> Main >> StartAtTargetB1 (end)
+#breadcrumb: Step in StartAtTargetB2 (PID=1111)
+#breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=1111) ./breadcrumb.sh >> Main >> StartAtTargetB2
+#breadcrumb: Step in Main (PID=2222, ParentPID=1111)
+#breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=2222, ParentPID=1111) ./breadcrumb.sh >> Main >> StartAtTargetB2 >> Main
+#breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=2222, ParentPID=1111) ./breadcrumb.sh >> Main >> StartAtTargetB2 >> Main >> StartAtTarget1
+#breadcrumb: Skipped until NotFoundCase (PID=2222, ParentPID=1111)
+#breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=2222, ParentPID=1111) ./breadcrumb.sh >> Main >> StartAtTargetB2 >> Main >> StartAtTarget1 (end)
+#breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=2222, ParentPID=1111) ./breadcrumb.sh >> Main >> StartAtTargetB2 >> Main >> StartAtTarget2
+#breadcrumb: Skipped until NotFoundCase (PID=2222, ParentPID=1111)
+#breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=2222, ParentPID=1111) ./breadcrumb.sh >> Main >> StartAtTargetB2 >> Main >> StartAtTarget2 (end)
+#breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=2222, ParentPID=1111) ./breadcrumb.sh >> Main >> StartAtTargetB2 >> Main >> StartAtTarget3
+#breadcrumb: Skipped until NotFoundCase (PID=2222, ParentPID=1111)
+#breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=2222, ParentPID=1111) ./breadcrumb.sh >> Main >> StartAtTargetB2 >> Main >> StartAtTarget3 (end)
+#breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=2222, ParentPID=1111) ./breadcrumb.sh >> Main >> StartAtTargetB2 >> Main (end)
+ERROR: Breadcrumb "NotFoundCase" in --start-at " >> Main >> StartAtTargetB2 >> Main >> NotFoundCase" is not matched with any PushBreadcrumb parameter.  #breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=2222, ParentPID=1111) ./breadcrumb.sh >> Main >> StartAtTargetB2
+ERROR  #breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=1111) ./breadcrumb.sh >> Main >> StartAtTargetB2
+OK. It is error case test.
+#breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=1111) ./breadcrumb.sh >> Main >> Tests >> TestOfStartAtSubProcess >> NotFoundCase (end)
+#breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=1111) ./breadcrumb.sh >> Main >> Tests >> TestOfStartAtSubProcess (end)
+#breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=1111) ./breadcrumb.sh >> Main >> Tests >> TestOfTestResult
+Pass.  #breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=1111) ./breadcrumb.sh >> Main >> Tests >> TestOfTestResult
+ERROR: __Message__.  #breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=1111) ./breadcrumb.sh >> Main >> Tests >> TestOfTestResult
+Pass.  #breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=1111) ./breadcrumb.sh >> Main >> Tests >> TestOfTestResult
+ERROR: Exit code = 1  #breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=1111) ./breadcrumb.sh >> Main >> Tests >> TestOfTestResult
+#breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=1111) ./breadcrumb.sh >> Main >> Tests >> TestOfTestResult
+
+EchoEndOfTest: Test Summary ----------------------------------------------------
+Pass.  #breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=1111) ./breadcrumb.sh >> Main >> Tests >> TestOfTestResult
+ERROR: __Message__.  #breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=1111) ./breadcrumb.sh >> Main >> Tests >> TestOfTestResult
+Pass.  #breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=1111) ./breadcrumb.sh >> Main >> Tests >> TestOfTestResult
+ERROR: Exit code = 1  #breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=1111) ./breadcrumb.sh >> Main >> Tests >> TestOfTestResult
+
+ErrorCount: 2  #breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=1111) ./breadcrumb.sh >> Main >> Tests >> TestOfTestResult
+(EchoEndOfTestMessage) This is an example.
+#breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=1111) ./breadcrumb.sh >> Main >> Tests >> TestOfTestResult (end)
+#breadcrumb: 0000-00-00T00:00:00.000000000+0000 (This is EACH_BREADCRUMB target example) (PID=1111) ./breadcrumb.sh >> Main
+#breadcrumb: 0000-00-00T00:00:00.000000000+0000 (This is EACH_BREADCRUMB target example) (PID=1111) ./breadcrumb.sh >> Main >> StartAtTargetC1
+Do in StartAtTargetC1
+#breadcrumb: 0000-00-00T00:00:00.000000000+0000 (This is EACH_BREADCRUMB target example) (PID=1111) ./breadcrumb.sh >> Main >> StartAtTargetC1 (end)
+#breadcrumb: 0000-00-00T00:00:00.000000000+0000 (This is EACH_BREADCRUMB target example) (PID=1111) ./breadcrumb.sh >> Main (end)
+#breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=1111) ./breadcrumb.sh >> Main >> Tests (end)
+#breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=1111) ./breadcrumb.sh >> Main (end)

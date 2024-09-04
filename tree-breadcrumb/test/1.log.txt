@@ -1,0 +1,7 @@
+log
+This file extension must not be ".log", because .gitignore ignores ".log" files.
+#breadcrumb: 2022-02-22T22:22:22.000000000+0900 (PID=1111) /c/Users/user1/test.sh >> Main
+start
+#breadcrumb: 2022-02-22T22:22:22.000000000+0900 (PID=1111) /c/Users/user1/test.sh >> Main >> Set up
+#breadcrumb: 2022-02-22T22:22:22.000000000+0900 (PID=1111) /c/Users/user1/test.sh >> Main >> Set up (end)
+#breadcrumb: 2022-02-22T22:22:22.000000000+0900 (PID=1111) /c/Users/user1/test.sh >> Main (end)

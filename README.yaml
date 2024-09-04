@@ -1,0 +1,63 @@
+Your Main:
+    PushBreadcrumb:
+        SetStartAt:
+        StepPrompt:
+        HasStarted:
+    PopBreadcrumb:
+Test:  #focus: TestOf
+    Automatic test:  #// You can run faster in WSL2
+        command: ./breadcrumb.sh
+        expect: |
+            ...
+            Pass.
+        Test cases:
+            TestOfExample:
+                TestOfExample2:
+                TestOfExample3:
+                TestOfExample4:
+            TestOfStartAt:
+                TestOfStartAt1:
+                    StartAtTarget2:
+                        # "${ThisScriptName}"  --without-log  --target "StartAtTargetA"
+                        ./breadcrumb.sh:
+                            Main:
+                                # if [ "${Options_Target}" == "StartAtTargetA" ]; then
+                                #     StartAtTargetA
+                                StartAtTargetA:
+                    StartAtTarget1:
+                    StartAtTarget3:
+                TestOfStartAtSubProcess:  #focus: GetStartAtOption
+                    FirstCase:
+                        # "${ThisScriptName}"  --without-log  --target "StartAtTargetB"
+                        ./breadcrumb.sh:
+                            ...:
+                            StartAtTargetB:
+                                # "${ThisScriptName}"  --without-log  --start-at "$( GetStartAtOption )"  $( GetStepOptions )  --target "StartAtTargetA"
+                                GetStartAtOption:
+                                ./breadcrumb.sh:
+                                    ...:
+                                    StartAtTargetA:
+                    NotFoundCase:
+            TestOfTestResult:
+            TestOfEachBreadcrumb:
+    Manual test 1:
+        command: ./breadcrumb.sh  --without-log  --target "StartAtTargetA"  --start-at " >> Main >> StartAtTarget2"  --step
+        expect: |  #// Input y and c
+            ...
+            #breadcrumb: Step in StartAtTarget2 (PID=1111)
+            #breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=1111)  >> Main >> StartAtTarget2
+            (N)o/(y)es/(c)ontinue: y
+            Do in StartAtTarget2
+            #breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=1111)  >> Main >> StartAtTarget2 (end)
+            (N)o/(y)es/(c)ontinue: c
+            #breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=1111)  >> Main >> StartAtTarget3
+            Do in StartAtTarget3
+            #breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=1111)  >> Main >> StartAtTarget3 (end)
+            #breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=1111)  >> Main (end)
+    Manual test 2:
+        command: ./breadcrumb.sh  --without-log  --target "StartAtTargetA"  --start-at " >> Main >> StartAtTarget2"  --step-after
+        expect: |  #// Input Ctrl+C
+            ...
+            Do in StartAtTarget2
+            #breadcrumb: 0000-00-00T00:00:00.000000000+0000 (PID=1111)  >> Main >> StartAtTarget2 (end)
+            (N)o/(y)es/(c)ontinue: (Ctrl+C)
