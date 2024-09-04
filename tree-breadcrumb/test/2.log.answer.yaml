@@ -54,7 +54,8 @@ WithoutEnd:
     SetBreadcrumb4:
         4: |
             #breadcrumb: 2022-02-22T22:22:22.000000000+0900 (PID=1111) /c/Users/user1/sub.sh >> WithoutEnd >> SetBreadcrumb4
-            #breadcrumb: 2022-02-22T22:22:22.000000000+0900 (PID=1111) /c/Users/user1/sub.sh >> WithoutEnd (end)
+    2: |
+        #breadcrumb: 2022-02-22T22:22:22.000000000+0900 (PID=1111) /c/Users/user1/sub.sh >> WithoutEnd (end)
 DoubleLevelEnd:
     1: |
         #breadcrumb: 2022-02-22T22:22:22.000000000+0900 (PID=1111) /c/Users/user1/sub.sh >> DoubleLevelEnd

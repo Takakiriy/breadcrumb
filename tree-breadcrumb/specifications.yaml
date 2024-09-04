@@ -1,6 +1,21 @@
 Test:
     Command:  #// Run example and test
+        Install Node.js: |  #// Windows WSL2 case
+            code --remote wsl+__Distro__   #// Open Visual Studio Code (VSCode)
+            curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.0/install.sh | bash
+            nvm install 20
+            nvm alias default 20
+            (close VSCode)  #// Change Node.js version using by VSCode.
+        Install this project: |  #// Windows WSL2 case
+            code --remote wsl+__Distro__
+            cd ${HOME}
+            git clone  https://github.com/Takakiriy/breadcrumb
+            cd  breadcrumb
+            git config --local user.name "__YourName__"
+            git config --local user.email "__YourEMail__"
+            (close VSCode)
         New terminal - set up and start background tasks:
+            code --remote wsl+__Distro__  "home/__User__/breadcrumb/tree-breadcrumb"
             npm ci
             node_modules/typescript/bin/tsc --watch
         New terminal - support_node.cjs:

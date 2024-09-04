@@ -146,10 +146,9 @@ const a = "";
         // If "nextBreadcrumbs" is shallower
         // In normal case, nextBreadcrumbs has "end breadcrumb". See other code.
         else if (nextBreadcrumbCount < currentBreadcrumbCount) {
-            if (nextBreadcrumbs.endsWith("(end)")) {
-                nextBreadcrumbCount -= 1;
-            }
             nextLogIndent = TabSpace.repeat(1 + nextBreadcrumbCount);
+            ShallowFirstLog = true;
+            LogIndent
 
             // Output example:
             //     2:
