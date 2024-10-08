@@ -455,7 +455,7 @@ function  EchoWithBreadcrumb() {
 function  OnEachBreadcrumb() {
     #// You can edit this function.
     if [ "${EACH_BREADCRUMB}" != "" ]; then
-        ${EACH_BREADCRUMB}  #// e.g. Script file path to watch a file contents
+        ${EACH_BREADCRUMB}  #// e.g. Echo script file path to watch a file contents. EACH_BREADCRUMB="__FullPathOf__/_watch.sh"  __Command__ __Parameters__
     fi
 }
 
