@@ -303,13 +303,15 @@ function  PopBreadcrumb() {
         StartAt=""
             #// Clear start at point in child process.
             #// If start at point in child process was not matched, "Not matched breadcrumb" error occurrs in child process.
-    elif [ "${StartAt}" != ""  -a  "${CurrentBreadcrumb}" == "" ]; then
+    elif [ "${StartAt}" != "" ] && [ "${CurrentBreadcrumb}" == "" ]; then
         local  notFoundBreadCrumb="${StartAt%%${tab}*}"  #// left of "${tab}"
         local  startAtOption="$( echo "${Options_StartAt}"  |  sed "s/->>/>>/g" )"
 
-        Error  "ERROR: Breadcrumb \"${notFoundBreadCrumb}\" in --start-at \"${startAtOption}\" is not matched with any PushBreadcrumb parameter."
+        local  errorMessage="ERROR: Breadcrumb \"${notFoundBreadCrumb}\" in --start-at \"${startAtOption}\" is not matched with any PushBreadcrumb parameter."
+        errorMessage="${errorMessage} Not supported --start-at option, if \"${notFoundBreadCrumb}\" is root breadcrumb. Please add root breadcrumb."
+        Error  "${errorMessage}"
     fi
-    if [ "${StepMode}" != ""  -o  "${StepAfterMode}" != "" ]; then
+    if [ "${StepMode}" != "" ] || [ "${StepAfterMode}" != "" ]; then
         if [ "${HasStartedFlag}" == "true" ]; then
             StepPrompt
         fi
@@ -351,7 +353,7 @@ function  SetStartAt() {
     fi
 
     #// Update "HasStartedFlag"
-    if [ "${HasStartedFlag}" == "false"  -o  "${StartAt}" != "" ]; then
+    if [ "${HasStartedFlag}" == "false" ] || [ "${StartAt}" != "" ]; then
         local  startAt0="${StartAt%%${tab}*}"
 
         if echo  "${CurrentBreadcrumb}"  |  grep -F "${startAt0}" > /dev/null; then  #// "Options_StartAt" and "startAt0" are NOT regular expression.
