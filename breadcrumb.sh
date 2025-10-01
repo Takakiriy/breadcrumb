@@ -242,8 +242,11 @@ function  PushBreadcrumb() {
     #//         PushBreadcrumb  " >> First"  "HasStarted"  ||  return  0
     #//     Example4:
     #//         if PushBreadcrumb  " >> First"  "HasStarted"  -o  "${Options_First}" != ""; then  #// See Linux test command
+    #//     Example5:
+    #//         if PushBreadcrumb  " >> First"  "ChildProcessWillBeStarted"; then
+    #//             call_breadcrumb_supported_command
     local  breadcrumb="$1"  #// e.g. " >> First"
-    local  option="$2"  #// "" or "HasStarted"
+    local  option="$2"  #// "", "HasStarted" or "ChildProcessWillBeStarted"
     shift  2
     local  additionalCondition=( "$@" )  #// "" or condition.  e.g.) -o  "${var}" != ""
     local  dateTime="$( date +"%Y-%m-%dT%H:%M:%S.%N%z" )"
@@ -272,7 +275,10 @@ function  PushBreadcrumb() {
         fi
     fi
 
-    if [ "${option}" == "HasStarted" ]; then
+    if [ "${option}" == "HasStarted" ] || [ "${option}" == "ChildProcessWillBeStarted" ]; then
+        if [ "${option}" == "ChildProcessWillBeStarted" ]; then
+            InChildProcess="yes"
+        fi
         HasStarted
         local  exitCode=$?
         if [ "${exitCode}" == 0  "${additionalCondition[@]}" ]; then
@@ -306,9 +312,12 @@ function  PopBreadcrumb() {
     elif [ "${StartAt}" != "" ] && [ "${CurrentBreadcrumb}" == "" ]; then
         local  notFoundBreadCrumb="${StartAt%%${tab}*}"  #// left of "${tab}"
         local  startAtOption="$( echo "${Options_StartAt}"  |  sed "s/->>/>>/g" )"
+        local  mainBreadcrumb="$( echo "${startAtOption}"  |  sed "s/^ >> //"  |  sed "s/ *>>.*//" )"
 
         local  errorMessage="ERROR: Breadcrumb \"${notFoundBreadCrumb}\" in --start-at \"${startAtOption}\" is not matched with any PushBreadcrumb parameter."
-        errorMessage="${errorMessage} Not supported --start-at option, if \"${notFoundBreadCrumb}\" is root breadcrumb. Please add root breadcrumb."
+        if [ "${notFoundBreadCrumb}" == "${mainBreadcrumb}" ]; then
+            errorMessage="${errorMessage} Not supported --start-at option, if \"${notFoundBreadCrumb}\" is main breadcrumb. Please add root breadcrumb."
+        fi
         Error  "${errorMessage}"
     fi
     if [ "${StepMode}" != "" ] || [ "${StepAfterMode}" != "" ]; then
@@ -316,6 +325,7 @@ function  PopBreadcrumb() {
             StepPrompt
         fi
     fi
+    InChildProcess=""
 }
 
 function  SetBreadcrumb() {
@@ -445,7 +455,9 @@ function  EchoWithBreadcrumb() {
     if [ "${ParentProcessBreadcrumb}${CurrentBreadcrumb}" == "" ]; then
         local  breadcrumb=""
     else
-        local  breadcrumb=" ${ParentProcessBreadcrumb}${CurrentBreadcrumb}"
+        local  startAtOption="$( echo "${Options_StartAt}"  |  sed "s/->>/>>/g" )"
+        local  commandPath="${ParentProcessBreadcrumb%% >>*}"  #// left of " >>"
+        local  breadcrumb=" To continue, input the command like: ${commandPath}  --start-at \"${startAtOption}\""
     fi
     if [ "${message}" != "" ]; then
         local  message="${message}  "
