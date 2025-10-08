@@ -455,8 +455,9 @@ function  EchoWithBreadcrumb() {
     if [ "${ParentProcessBreadcrumb}${CurrentBreadcrumb}" == "" ]; then
         local  breadcrumb=""
     else
-        local  startAtOption="$( echo "${Options_StartAt}"  |  sed "s/->>/>>/g" )"
         local  commandPath="${ParentProcessBreadcrumb%% >>*}"  #// left of " >>"
+        local  commandAndFullBreadcrumb="${ParentProcessBreadcrumb}${CurrentBreadcrumb}"
+        local  startAtOption=" >>${commandAndFullBreadcrumb#* >>*}"  #// right of " >>"
         local  breadcrumb=" To continue, input the command like: ${commandPath}  --start-at \"${startAtOption}\""
     fi
     if [ "${message}" != "" ]; then
