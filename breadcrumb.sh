@@ -458,7 +458,10 @@ function  EchoWithBreadcrumb() {
         local  commandPath="${ParentProcessBreadcrumb%% >>*}"  #// left of " >>"
         local  commandAndFullBreadcrumb="${ParentProcessBreadcrumb}${CurrentBreadcrumb}"
         local  startAtOption=" >>${commandAndFullBreadcrumb#* >>*}"  #// right of " >>"
-        local  breadcrumb=" To continue, input the command like: ${commandPath}  --start-at \"${startAtOption}\""
+        if [ "${ParentPIDLabel}" != "" ]; then
+            commandPath="(parent process of)${commandPath}"
+        fi
+        local  breadcrumb=" To continue, input the command like: ${commandPath} __OtherOptions__  --start-at \"${startAtOption}\""
     fi
     if [ "${message}" != "" ]; then
         local  message="${message}  "

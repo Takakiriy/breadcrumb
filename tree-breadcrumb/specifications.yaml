@@ -1,5 +1,7 @@
 Test:
-    Command:  #// Run example and test
+    shell script tester:
+        ./breadcrumb.sh
+    Node.js tester:  #// Run example and test
         Install Node.js: |  #// Windows WSL2 case
             code --remote wsl+__Distro__   #// Open Visual Studio Code (VSCode)
             curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.0/install.sh | bash
