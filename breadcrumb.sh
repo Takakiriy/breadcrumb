@@ -1,19 +1,31 @@
 #!/bin/bash
 if echo "$0" | grep "/" | grep -E -v "bash-debug|systemd" > /dev/null; then  cd "${0%/*}"  ;fi  # cd this file folder
 
+#// breadcrumb test and code
+Tests=(  #// --test option parameters
+    "TestOfExample"
+    "TestOfStartAt"
+    "TestOfTestResult"
+    "TestOfEachBreadcrumb"
+)
+
 PositionalArgs=()
 while [[ $# -gt 0 ]]; do
     case $1 in
+        -l|--list)  Options_List="yes"; shift;;
+        -t|--test)  Options_Test="$2"; shift; shift;;
         #// Start of breadcrumb options
         --start-at)     Options_StartAt="$2"; shift; shift;;
         --step)         Options_Step="yes"; shift;;
         --step-after)   Options_StepAfter="yes"; shift;;
         --parent)       Options_Parent="$2"; ParentPIDLabel=", ParentPID=${Options_Parent}"; shift; shift;;  #// Parent script PID. Not ${PPID}
         --silent-breadcrumb)  Options_SilentBreadcrumb="yes"; shift;;
+        --start-at-sub-job)  Options_StartAtSubJob="$2"; shift; shift;;
         #// End of breadcrumb options
         --without-log)  Options_WithoutLog="yes"; shift;;
         --target)       Options_Target="$2"; shift; shift;;
-        -*) echo "Unknown option $1"; exit 1;;
+        --) shift;  PositionalArgs+=("$@"); set --;;
+        --*) echo "Unknown option $1"; exit 1;;
         *) PositionalArgs+=("$1"); shift;;
     esac
 done
@@ -26,27 +38,44 @@ ThisScriptName="./breadcrumb.sh"
 RootBreadcrumb="${ThisScriptName}"  #// In old specification, ParentBreadcrumb instead of RootBreadcrumb.
 
 function  Main() {
-    PushBreadcrumb  " >> Main"
-    if [ "${Options_Target}" == "" ]; then  #// Main case
-        PushBreadcrumb  " >> Tests"
-
-        TestOfExample
-        TestOfStartAt
-        TestOfTestResult
-        TestOfEachBreadcrumb
-        PopBreadcrumb  " >> Tests"
+    if [ "${Options_List}" != "" ]; then
+        echo  "${Tests[@]}" | sed "s/ /\n/g"
+    elif !( TestOptionIsValid ); then
+        echo  "ERROR: Not found test name \"${Options_Test}\". See Tests variable in \"${ThisScriptFullPath}\"." >&2
     else
-        if [ "${Options_Target}" == "StartAtTargetA" ]; then
-            StartAtTargetA
-        elif [ "${Options_Target}" == "StartAtTargetB" ]; then
-            StartAtTargetB
-        elif [ "${Options_Target}" == "StartAtTargetC" ]; then
-            StartAtTargetC
+        PushBreadcrumb  " >> Main"
+        if [ "${Options_Target}" == "" ]; then  #// Main case
+            PushBreadcrumb  " >> Tests"
+            if ShouldRunTest "TestOfExample"; then
+                TestOfExample
+            fi
+            if ShouldRunTest "TestOfStartAt"; then
+                TestOfStartAt
+            fi
+            if ShouldRunTest "TestOfTestResult"; then
+                TestOfTestResult
+            fi
+            if ShouldRunTest "TestOfEachBreadcrumb"; then
+                TestOfEachBreadcrumb
+            fi
+            PopBreadcrumb  " >> Tests"
         else
-            echo  "ERROR: not found --target option function. (target = ${Options_Target})" >&2
+            if [ "${Options_Target}" == "StartAtTargetA" ]; then
+                StartAtTargetA
+            elif [ "${Options_Target}" == "StartAtTargetB" ]; then
+                StartAtTargetB
+            elif [ "${Options_Target}" == "StartAtTargetC" ]; then
+                StartAtTargetC
+            elif [ "${Options_Target}" == "MainJobSubJob" ]; then
+                MainJobSubJob
+            elif [ "${Options_Target}" == "SubJob" ]; then
+                SubJob
+            else
+                echo  "ERROR: not found --target option function. (target = ${Options_Target})" >&2
+            fi
         fi
+        PopBreadcrumb  " >> Main"
     fi
-    PopBreadcrumb  " >> Main"
 }
 
 function  TestOfExample() {
@@ -55,7 +84,7 @@ function  TestOfExample() {
     TestOfExample4
 }
 
-#// Test of Example1 is donw in Main function.
+#// Test of Example1 is done in Main function.
 
 function  TestOfExample2() {
     PushBreadcrumb  " >> TestOfExample2"  "HasStarted"  ||  return  0
@@ -100,6 +129,7 @@ function  TestOfExample4() {
 function  TestOfStartAt() {
     TestOfStartAt1
     TestOfStartAtSubProcess
+    TestOfStartAtSubJob
 }
 
 function  TestOfStartAt1() {
@@ -196,6 +226,82 @@ function  StartAtTargetB() {
     fi
 }
 
+function  TestOfStartAtSubJob() {
+    PushBreadcrumb  " >> TestOfStartAtSubJob"  "HasStarted"  ||  return  0
+
+    if PushBreadcrumb  " >> StartAtSubJob"  "HasStarted"; then
+
+        local  startAtOption=""
+        local  startAtSubJobOption=" >> Main >> SubJob2"
+        EchoTestOfStartAtOption  "${startAtOption}"  "${startAtSubJobOption}"
+        "${ThisScriptName}"  --without-log  --start-at "${startAtOption}"  --start-at-sub-job "${startAtSubJobOption}"  --target "MainJobSubJob"  ||  Error
+        PopBreadcrumb  " >> StartAtSubJob"
+    fi
+
+    if PushBreadcrumb  " >> StartAtMainJobAfterSubJob"  "HasStarted"; then
+
+        local  startAtOption=" >> Main >> MainJob2"
+        local  startAtSubJobOption=""
+        EchoTestOfStartAtOption  "${startAtOption}"  "${startAtSubJobOption}"
+        "${ThisScriptName}"  --without-log  --start-at "${startAtOption}"  --start-at-sub-job "${startAtSubJobOption}"  --target "MainJobSubJob"  ||  Error
+        PopBreadcrumb  " >> StartAtMainJobAfterSubJob"
+    fi
+
+    if PushBreadcrumb  " >> StartAtMainAndSubJob"  "HasStarted"; then
+
+        local  startAtOption=" >> Main >> MainJob2"
+        local  startAtSubJobOption=" >> Main >> SubJob2"
+        EchoTestOfStartAtOption  "${startAtOption}"  "${startAtSubJobOption}"
+        "${ThisScriptName}"  --without-log  --start-at "${startAtOption}"  --start-at-sub-job "${startAtSubJobOption}"  --target "MainJobSubJob"  ||  Error
+        PopBreadcrumb  " >> StartAtMainAndSubJob"
+    fi
+
+    # if PushBreadcrumb  " >> StartAt2ndSubJob"  "HasStarted"; then
+    #     PopBreadcrumb  " >> StartAt2ndSubJob"
+    # fi
+    PopBreadcrumb  " >> TestOfStartAtSubJob"
+}
+
+function  MainJobSubJob() {
+    StartSubJob
+    sleep  1s
+    echo  "$ sleep 1s"
+    MainJob
+}
+
+function  StartSubJob() {
+
+    local  commandLine="\"${ThisScriptName}\"  --without-log  --target \"SubJob\""
+    commandLine="${commandLine}  $( GetSubJobStartAtOption )  $( GetStepOptions )"
+    echo  "$ $( GetArgumentsString ${commandLine} )  &"
+
+    bash -c  "${commandLine}"  &
+        #// Go to "SubJob" function.
+    ContinueAfterStartSubJob
+}
+
+function  SubJob() {
+    if PushBreadcrumb  " >> SubJob1"  "HasStarted"; then
+        echo  "Do in SubJob1"
+        PopBreadcrumb  " >> SubJob1"
+    fi
+    if PushBreadcrumb  " >> SubJob2"  "HasStarted"; then
+        echo  "Do in SubJob2"
+        PopBreadcrumb  " >> SubJob2"
+    fi
+}
+
+function  MainJob() {
+    if PushBreadcrumb  " >> MainJob1"  "HasStarted"; then
+        echo  "Do in MainJob1"
+        PopBreadcrumb  " >> MainJob1"
+    fi
+    if PushBreadcrumb  " >> MainJob2"  "HasStarted"; then
+        echo  "Do in MainJob2"
+        PopBreadcrumb  " >> MainJob2"
+    fi
+}
+
 function  TestOfTestResult() {
     PushBreadcrumb  " >> TestOfTestResult"  "HasStarted"  ||  return  0
 
@@ -215,7 +321,13 @@ function  TestOfTestResult() {
 
 function  EchoTestOfStartAtOption() {
     local  startAtOption="$1"
-    echo  "******* Test of --start-at \"${startAtOption}\""
+    local  startAtSubJobOption="$2"
+    local  options=""
+    if [ "${startAtSubJobOption}" != "" ]; then
+        options="${options}  --start-at-sub-job \"${startAtSubJobOption}\""
+    fi
+
+    echo  "******* Test of --start-at \"${startAtOption}\"${options}"
 }
 
 function  EchoEndOfTestMessage() {
@@ -343,12 +455,18 @@ function  SetStartAt() {
 
     #// Initialize "HasStartedFlag"
     if [ "${HasStartedFlag}" == "" ]; then
-        if echo "${Options_StartAt}"  |  grep  "\->>" > /dev/null; then  #// "\" in "\-->" escape character. If --start-at option contains "->>".
-            ParentProcessBreadcrumb="${RootBreadcrumb}$( echo "${Options_StartAt}"  |  sed -E 's/^(.*)->>.*$/\1/'  |  sed -E 's/ *$//' )"
+        if [ "${Options_StartAt}" == "" ] && [ "${Options_StartAtSubJob}" != "" ]; then
+            local  startAt="${Options_StartAtSubJob}"
+        else
+            local  startAt="${Options_StartAt}"
+        fi
+        if echo "${startAt}"  |  grep  "\->>" > /dev/null; then  #// "\" in "\-->" escape character. If --start-at option contains "->>".
+            ParentProcessBreadcrumb="${RootBreadcrumb}$( echo "${startAt}"  |  sed -E 's/^(.*)->>.*$/\1/'  |  sed -E 's/ *$//' )"
         else
             ParentProcessBreadcrumb="${RootBreadcrumb}"
         fi
-        local  currentProcessStartAt="$( echo "${Options_StartAt}"  |  sed "s/.*->> *//" )"
+        local  currentProcessStartAt="$( echo "${startAt}"  |  sed "s/.*->> *//" )"
+
         if [ "${currentProcessStartAt}" == "" ]; then
             HasStartedFlag="true"
         else
@@ -356,6 +474,7 @@ function  SetStartAt() {
         fi
         StepMode="${Options_Step}"
         StepAfterMode="${Options_StepAfter}"
+
         StartAt="$( echo  "${currentProcessStartAt}"  |  sed  "s/ >> /${tab}/g" )"
         if [ "${StartAt:0:1}" == "${tab}" ]; then
             StartAt="${StartAt:1}"
@@ -375,7 +494,7 @@ function  SetStartAt() {
             else
                 StartAt="${nextStartAt}"
             fi
-            echo  "#breadcrumb: Step in ${startAt0} (PID=$$${ParentPIDLabel})"
+            echo  "#breadcrumb:  Step in ${startAt0} (PID=$$${ParentPIDLabel})"
         else
             HasStartedFlag="false"
         fi
@@ -421,6 +540,22 @@ function  GetStepOptions() {
     echo  "${options}"
 }
 
+function  GetSubJobStartAtOption() {
+    if [ "${Options_StartAtSubJob}" != "" ]; then
+        echo  "--start-at \"${Options_StartAtSubJob}\""
+    else
+        echo  ""
+    fi
+}
+
+function  ContinueAfterStartSubJob() {
+    if [ "${Options_StartAt}" == "" ]; then
+        HasStartedFlag="true"
+        StartAt=""
+        echo  "#breadcrumb:  Started main job (PID=$$${ParentPIDLabel})"
+    fi
+}
+
 function  HasStarted() {
     #//     Example:
     #//         if HasStarted; then
@@ -448,7 +583,8 @@ function  EchoWithBreadcrumb() {
     #//         #breadcrumb: 2023-10-10T10:00:00.1234568+0900 /home/user1/this-script.sh >> Start
     #//         Pass.  #breadcrumb: 2023-10-10T11:11:22.789456145+0900 /home/user1/this-script.sh >> Start
     local  message="$1"
-    local  dateTime="$2"  #// optional
+    local  dateTime="$2"  #// Optional
+    local  errorOption="$3"  #// Optional. "" or "--error"
     if [ "${dateTime}" == "" ]; then
         local  dateTime="$( date +"%Y-%m-%dT%H:%M:%S.%N%z" )"
     fi
@@ -458,10 +594,15 @@ function  EchoWithBreadcrumb() {
         local  commandPath="${ParentProcessBreadcrumb%% >>*}"  #// left of " >>"
         local  commandAndFullBreadcrumb="${ParentProcessBreadcrumb}${CurrentBreadcrumb}"
         local  startAtOption=" >>${commandAndFullBreadcrumb#* >>*}"  #// right of " >>"
+        local  parentProcessOf=""
         if [ "${ParentPIDLabel}" != "" ]; then
-            commandPath="(parent process of)${commandPath}"
+            parentProcessOf="(parent process of)"
         fi
-        local  breadcrumb=" To continue, input the command like: ${commandPath} __OtherOptions__  --start-at \"${startAtOption}\""
+        if [ "${errorOption}" == "--error" ]; then
+            local  breadcrumb=" To continue, input the command like: ${parentProcessOf}${commandPath} __OtherOptions__  --start-at \"${startAtOption}\""
+        else
+            local  breadcrumb=" ${parentProcessOf}${ParentProcessBreadcrumb}${CurrentBreadcrumb}"
+        fi
     fi
     if [ "${message}" != "" ]; then
         local  message="${message}  "
@@ -526,11 +667,12 @@ function  EchoTestResultBreadcrumb() {
             local  message="ERROR: Exit code = ${exitCode}"
         fi
     fi
-    local  fullMessage="$( EchoWithBreadcrumb  "${message}"  "${dateTime}" )"
 
     if echo "${message}"  |  grep 'Pass\.' > /dev/null; then
+        local  fullMessage="$( EchoWithBreadcrumb  "${message}"  "${dateTime}" )"
         echo  "${fullMessage}"
     else
+        local  fullMessage="$( EchoWithBreadcrumb  "${message}"  "${dateTime}"  --error )"
         TestError  "${message}"  "${dateTime}"
     fi
 
@@ -564,7 +706,7 @@ function  TestError() {
     fi
     if [ "${ErrorCountBeforeStart}" == "${NotInErrorTest}" ]; then
 
-        EchoWithBreadcrumb  "${errorMessage}"  "${dateTime}"
+        EchoWithBreadcrumb  "${errorMessage}"  "${dateTime}"  --error
     fi
     LastErrorMessage="${errorMessage}"
     ErrorCount=$(( ${ErrorCount} + 1 ))
@@ -574,6 +716,54 @@ LastErrorMessage=""
 
 function  EscapeRegularExpression() {
     echo "$1" | sed -E 's/([$^.*+?\(){}|\/[])/\\\1/g' | sed -E 's/]/\\]/g'
+}
+
+function  RunWithEcho() {
+    echo  "$ $( GetArgumentsString  "$@" )"  >&2
+    "$@"
+}
+
+function  GetArgumentsString() {
+    local  arguments=""
+
+    for argument in "$@"; do
+        if [ "${argument:0:1}" == "-" ]; then
+            arguments="${arguments} ${argument}"
+        elif [ "${argument}" == ""  -o  "${argument}" == "&&"  -o  "${argument}" == "||" ]; then
+            arguments="${arguments} \"${argument}\""
+        elif [ "$( echo "${argument}" | sed -E 's- |\.|/--' )" != "${argument}" ]; then  #// has space, period or slash
+            arguments="${arguments} \"${argument}\""
+        else
+            arguments="${arguments} ${argument}"
+        fi
+    done
+
+    echo  "${arguments:1}"
+}
+
+function  ShouldRunTest() {
+    local  thisTest="$1"
+    if [ "${Options_Test}" == "" ]; then
+        true
+    else
+        test  "${thisTest}" == "${Options_Test}"
+    fi
+}
+
+function  TestOptionIsValid() {
+    local  testName
+
+    if [ "${Options_Test}" == "" ]; then
+        true
+    else
+        for testName in "${Tests[@]}"; do
+            if [ "${Options_Test}" == "${testName}" ]; then
+                true
+                return
+            fi
+        done
+        false
+    fi
 }
 
 # pp
@@ -638,7 +828,7 @@ function  Error() {
     fi
     if [ "${exitCode}" == "" ]; then  exitCode=2  ;fi
 
-    EchoWithBreadcrumb  "${errorMessage}"  >&2
+    EchoWithBreadcrumb  "${errorMessage}"  ""  --error  >&2
     exit  "${exitCode}"
 }
 
@@ -647,9 +837,10 @@ if [ "${Options_WithoutLog}" != "" ]; then
     Main
 else
     Main  2>&1  |  tee  "_output.txt"
-    sed -i -E 's/[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{9}\+[0-9]{4}/0000-00-00T00:00:00.000000000+0000/'  "_output.txt"
-    sed -i -E 's/\(PID=[0-9]+\)/(PID=1111)/'  "_output.txt"
-    sed -i -E 's/\(PID=[0-9]+\, ParentPID=[0-9]+\)/(PID=2222, ParentPID=1111)/'  "_output.txt"
+    sed -E 's/[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{9}\+[0-9]{4}/0000-00-00T00:00:00.000000000+0000/'  -i "_output.txt"
+    sed -E 's/\(PID=[0-9]+\)/(PID=1111)/'  -i "_output.txt"
+    sed -E 's/\(PID=[0-9]+\, ParentPID=[0-9]+\)/(PID=2222, ParentPID=1111)/'  -i "_output.txt"
+    sed -E 's/--parent [0-9]+/--parent 1111/'  -i "_output.txt"
 
     if diff  "_output.txt"  "log"  >  /dev/null; then
         rm  "_output.txt"

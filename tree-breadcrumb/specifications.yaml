@@ -1,7 +1,7 @@
-Test:
-    shell script tester:
+Test command:
+    bash breadcrumb test:
         ./breadcrumb.sh
-    Node.js tester:  #// Run example and test
+    tree-breadcrumb test:  #// Run example and test
         Install Node.js: |  #// Windows WSL2 case
             code --remote wsl+__Distro__   #// Open Visual Studio Code (VSCode)
             curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.0/install.sh | bash
@@ -31,7 +31,51 @@ Test:
         (If necessary) Set up for 2nd try:
             rm -rf build
             rm -rf node_modules
-    Code:
+Code:
+    bash breadcrumb:
+        test:
+            TestOfExample:
+                TestOfExample2:
+                TestOfExample3:
+                TestOfExample4:
+            TestOfStartAt:
+                TestOfStartAt1:
+                    StartAtTarget2:
+                        # local  startAtOption=" >> Main >> StartAtTarget2"
+                        # "${ThisScriptName}"  --without-log  --target "StartAtTargetA"  --start-at "${startAtOption}"
+                        StartAtTargetA:
+                            StartAtTarget1:
+                            StartAtTarget2:
+                            StartAtTarget3:
+                    StartAtTarget1:
+                    StartAtTarget3:
+                    NotFoundCase:
+                TestOfStartAtSubProcess:
+                    FirstCase:
+                    NotFoundCase:
+                TestOfStartAtSubJob:
+                    StartAtSubJob:
+                        MainJobSubJob:
+                            StartSubJob:
+                                # local  commandLine="\"${ThisScriptName}\"  --without-log  --target \"SubJob\""
+                                # bash -c  "${commandLine}"  &
+                                SubJob:
+                            MainJob:
+                    StartAtMainJobAfterSubJob:
+            TestOfTestResult:
+            TestOfEachBreadcrumb:
+        main:
+            PushBreadcrumb:
+                SetStartAt:
+                    # // Initialize "HasStartedFlag"
+                    # StartAt="$( echo  "${currentProcessStartAt}"  |  sed  "s/ >> /${tab}/g" )"
+                    # // Update "HasStartedFlag"
+                StepPrompt:
+                HasStarted:
+            PopBreadcrumb:
+            GetStartAtOption:
+            GetStepOptions:
+    tree-breadcrumb:
         main (test):  #ref: src/test.ts
             # async function  main() {  // Test main
         main (application):  #ref: src/test.ts
