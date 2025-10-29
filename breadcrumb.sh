@@ -359,8 +359,9 @@ function  PushBreadcrumb() {
     #//             call_breadcrumb_supported_command
     local  breadcrumb="$1"  #// e.g. " >> First"
     local  option="$2"  #// "", "HasStarted" or "ChildProcessWillBeStarted"
-    shift  2
-    local  additionalCondition=( "$@" )  #// "" or condition.  e.g.) -o  "${var}" != ""
+    local  additionalCondition0="$3"     #// "" or condition.  e.g.) -o
+    shift  3
+    local  additionalCondition=( "$@" )  #// "" or condition.  e.g.) "${var}" != ""
     local  dateTime="$( date +"%Y-%m-%dT%H:%M:%S.%N%z" )"
     if [ "${HasStartedFlag}" == "" ]; then
         #// Old specification warning
@@ -393,12 +394,25 @@ function  PushBreadcrumb() {
         fi
         HasStarted
         local  exitCode=$?
-        if [ "${exitCode}" == 0  "${additionalCondition[@]}" ]; then
-            return  0  #// true
+        if [ "${additionalCondition0}" == "" ]; then
+            if [ "${exitCode}" == 0 ]; then
+                return  0  #// true
+            fi
         else
-            PopBreadcrumb  "${breadcrumb}"
-            return  1  #// false
+            test  "${additionalCondition[@]}"
+            local  additionalResult=$?
+            if [ "${additionalCondition0}" == "-o" ]; then
+                if [ "${exitCode}" == 0 ] || [ "${additionalResult}" == 0 ]; then
+                    return  0  #// true
+                fi
+            elif [ "${additionalCondition0}" == "-a" ]; then
+                if [ "${exitCode}" == 0 ] && [ "${additionalResult}" == 0 ]; then
+                    return  0  #// true
+                fi
+            fi
         fi
+        PopBreadcrumb  "${breadcrumb}"
+        return  1  #// false
     else
         test  "${option}" == ""  ||  Error  "If ${option} is PushBreadcrumb additionalCondition, specify HasStarted parameter."
         return

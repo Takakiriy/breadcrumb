@@ -222,7 +222,7 @@ export function  checkNotInGitWorking() {
     while (path_ !== '/') {
 
         if (fs.existsSync(`${path_}/.git`)) {
-            throw  new Error('This test is not supported with git submodule.')
+            throw  new Error('This test does not support git submodule.')
         }
         path_ = path.dirname(path_);
     }
