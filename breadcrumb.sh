@@ -358,11 +358,19 @@ function  PushBreadcrumb() {
     #//         if PushBreadcrumb  " >> First"  "ChildProcessWillBeStarted"; then
     #//             call_breadcrumb_supported_command
     local  breadcrumb="$1"  #// e.g. " >> First"
-    local  option="$2"  #// "", "HasStarted" or "ChildProcessWillBeStarted"
-    local  additionalCondition0="$3"     #// "" or condition.  e.g.) -o
+    local  option="${2-""}"  #// "", "HasStarted" or "ChildProcessWillBeStarted".  "${1-""}" means that "$1" default is "".
+    local  additionalCondition0="${3-""}"  #// "" or condition.  e.g.) -o.  "${1-""}" means that "$1" default is "".
     shift  3
     local  additionalCondition=( "$@" )  #// "" or condition.  e.g.) "${var}" != ""
     local  dateTime="$( date +"%Y-%m-%dT%H:%M:%S.%N%z" )"
+
+    #// Set default values. "! -v" means that variable is not defined.
+    if ! [[ -v HasStartedFlag ]]; then  HasStartedFlag=""  ;fi
+    if ! [[ -v ParentBreadcrumb ]]; then  ParentBreadcrumb=""  ;fi
+    if ! [[ -v RootBreadcrumb ]]; then  RootBreadcrumb=""  ;fi
+    if ! [[ -v ParentPIDLabel ]]; then  ParentPIDLabel=""  ;fi
+    if ! [[ -v Options_StartAtSubJob ]]; then  Options_StartAtSubJob=""  ;fi
+    if ! [[ -v Options_SilentBreadcrumb ]]; then  Options_SilentBreadcrumb=""  ;fi
     if [ "${HasStartedFlag}" == "" ]; then
         #// Old specification warning
         if [ "${ParentBreadcrumb}" != ""  -a  "${RootBreadcrumb}" == "" ]; then
@@ -597,8 +605,8 @@ function  EchoWithBreadcrumb() {
     #//         #breadcrumb: 2023-10-10T10:00:00.1234568+0900 /home/user1/this-script.sh >> Start
     #//         Pass.  #breadcrumb: 2023-10-10T11:11:22.789456145+0900 /home/user1/this-script.sh >> Start
     local  message="$1"
-    local  dateTime="$2"  #// Optional
-    local  errorOption="$3"  #// Optional. "" or "--error"
+    local  dateTime="${2-""}"  #// "${1-""}" means that "$1" default is "".
+    local  errorOption="${3-""}"  #// Optional. "" or "--error".  "${1-""}" means that "$1" default is "".
     if [ "${dateTime}" == "" ]; then
         local  dateTime="$( date +"%Y-%m-%dT%H:%M:%S.%N%z" )"
     fi
@@ -627,6 +635,10 @@ function  EchoWithBreadcrumb() {
 
 function  OnEachBreadcrumb() {
     #// You can edit this function.
+
+    #// Set default values. "! -v" means that variable is not defined.
+    if ! [[ -v EACH_BREADCRUMB ]]; then  EACH_BREADCRUMB=""  ;fi
+
     if [ "${EACH_BREADCRUMB}" != "" ]; then
         ${EACH_BREADCRUMB}  #// e.g. Echo script file path to watch a file contents. EACH_BREADCRUMB="__FullPathOf__/_watch.sh"  __Command__ __Parameters__
     fi
@@ -668,7 +680,7 @@ function  EchoTestResultBreadcrumb() {
     #//     EchoTestResultBreadcrumb  "$?"
     #//     EchoEndOfTest
     local  exitCode="$?"
-    local  message="$1"
+    local  message="${1-""}"  #// "${1-""}" means that "$1" default is "".
     local  dateTime="$( date +"%Y-%m-%dT%H:%M:%S.%N%z" )"
     if echo "${message}"  |  grep -E '^[0-9]+$' > /dev/null; then
         local  exitCode="${message}"
