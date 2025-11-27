@@ -360,7 +360,7 @@ function  PushBreadcrumb() {
     local  breadcrumb="$1"  #// e.g. " >> First"
     local  option="${2-""}"  #// "", "HasStarted" or "ChildProcessWillBeStarted".  "${1-""}" means that "$1" default is "".
     local  additionalCondition0="${3-""}"  #// "" or condition.  e.g.) -o.  "${1-""}" means that "$1" default is "".
-    shift  3
+    shift  3  ||  true
     local  additionalCondition=( "$@" )  #// "" or condition.  e.g.) "${var}" != ""
     local  dateTime="$( date +"%Y-%m-%dT%H:%M:%S.%N%z" )"
 
