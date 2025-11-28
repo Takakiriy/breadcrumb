@@ -384,7 +384,7 @@ function  PushBreadcrumb() {
     SetStartAt
 
     if [ "${Options_SilentBreadcrumb}" == "" ]; then
-        echo  "#breadcrumb: ${dateTime}$( OnEachBreadcrumb ) (PID=$$${ParentPIDLabel}) ${ParentProcessBreadcrumb}${CurrentBreadcrumb}"
+        echo  "#breadcrumb: ${dateTime}$( OnEachBreadcrumb ) $( GetCodePosition 1 ) (PID=$$${ParentPIDLabel}) ${ParentProcessBreadcrumb}${CurrentBreadcrumb}"
     fi
     test  "${breadcrumb:0:4}" == " >> "  ||  Error  "ERROR: bad breadcrumb \"${breadcrumb}\" in PushBreadcrumb."
     if [ "$( echo "${breadcrumb:4}"  |  grep -E ' >> ' )" != "" ]; then
@@ -437,7 +437,7 @@ function  PopBreadcrumb() {
     CurrentBreadcrumb="${ParentBreadcrumb}"  #// This is also changed by SetBreadcrumb function
 
     if [ "${Options_SilentBreadcrumb}" == "" ]; then
-        echo  "#breadcrumb: ${dateTime}$( OnEachBreadcrumb ) (PID=$$${ParentPIDLabel}) ${ParentProcessBreadcrumb}${CurrentBreadcrumb}${breadcrumb} (end)"
+        echo  "#breadcrumb: ${dateTime}$( OnEachBreadcrumb ) $( GetCodePosition 1 ) (PID=$$${ParentPIDLabel}) ${ParentProcessBreadcrumb}${CurrentBreadcrumb}${breadcrumb} (end)"
     fi
     if [ "${HasStartedFlag}" == "true" ]; then
         StartAt=""
@@ -468,7 +468,7 @@ function  SetBreadcrumb() {
 
     CurrentBreadcrumb="${ParentBreadcrumb}${breadcrumb}"
 
-    echo  "#breadcrumb: ${dateTime} (PID=$$${ParentPIDLabel}) ${ParentProcessBreadcrumb}${CurrentBreadcrumb}$( OnEachBreadcrumb )"
+    echo  "#breadcrumb: ${dateTime} $( GetCodePosition 1 ) (PID=$$${ParentPIDLabel}) ${ParentProcessBreadcrumb}${CurrentBreadcrumb}$( OnEachBreadcrumb )"
     SetStartAt
 }
 
@@ -602,8 +602,8 @@ function  EchoWithBreadcrumb() {
     #//         PushBreadcrumb  " >> Start"
     #//         EchoWithBreadcrumb  "Pass."
     #//     Output Example:
-    #//         #breadcrumb: 2023-10-10T10:00:00.1234568+0900 /home/user1/this-script.sh >> Start
-    #//         Pass.  #breadcrumb: 2023-10-10T11:11:22.789456145+0900 /home/user1/this-script.sh >> Start
+    #//         #breadcrumb: 2023-10-10T10:00:00.1234568+0900 ./example.sh:121 /home/user1/this-script.sh >> Start
+    #//         Pass.  #breadcrumb: 2023-10-10T11:11:22.789456145+0900 ./example.sh:122 /home/user1/this-script.sh >> Start
     local  message="$1"
     local  dateTime="${2-""}"  #// "${1-""}" means that "$1" default is "".
     local  errorOption="${3-""}"  #// Optional. "" or "--error".  "${1-""}" means that "$1" default is "".
@@ -630,15 +630,12 @@ function  EchoWithBreadcrumb() {
         local  message="${message}  "
     fi
 
-    echo  "${message}#breadcrumb: ${dateTime} (PID=$$${ParentPIDLabel})${breadcrumb}$( OnEachBreadcrumb )"
+    echo  "${message}#breadcrumb: ${dateTime} $( GetCodePosition 1 ) (PID=$$${ParentPIDLabel})${breadcrumb}$( OnEachBreadcrumb )"
 }
 
 function  OnEachBreadcrumb() {
     #// You can edit this function.
-
-    #// Set default values. "! -v" means that variable is not defined.
-    if ! [[ -v EACH_BREADCRUMB ]]; then  EACH_BREADCRUMB=""  ;fi
-
+    if ! [[ -v EACH_BREADCRUMB ]]; then  EACH_BREADCRUMB=""  ;fi  #// Set default values. "! -v" means that variable is not defined.
     if [ "${EACH_BREADCRUMB}" != "" ]; then
         ${EACH_BREADCRUMB}  #// e.g. Echo script file path to watch a file contents. EACH_BREADCRUMB="__FullPathOf__/_watch.sh"  __Command__ __Parameters__
     fi
@@ -646,6 +643,7 @@ function  OnEachBreadcrumb() {
 
 function  StepPrompt() {
     if [ "${StepMode}" != ""  -o  "${StepAfterMode}" != "" ]; then
+        if ! [[ -v _Dbg_DEBUGGER_LEVEL ]]; then  _Dbg_DEBUGGER_LEVEL=""  ;fi  #// Set default values. "! -v" means that variable is not defined.
         if [ "${_Dbg_DEBUGGER_LEVEL}" != "" ]; then
             echo  "WARNING: --step option is disabled, because debugger will stop, when keyoboard input."
             StepMode=""
