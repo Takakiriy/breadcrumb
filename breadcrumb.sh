@@ -37,6 +37,8 @@ ThisScriptName="./breadcrumb.sh"
 # RootBreadcrumb="${ThisScriptFullPath}"
 RootBreadcrumb="${ThisScriptName}"  #// In old specification, ParentBreadcrumb instead of RootBreadcrumb.
 
+#section: Main
+
 function  Main() {
     if [ "${Options_List}" != "" ]; then
         echo  "${Tests[@]}" | sed "s/ /\n/g"
@@ -344,6 +346,8 @@ function  StartAtTargetC() {
         PopBreadcrumb  " >> StartAtTargetC1"
     fi
 }
+
+#section: Breadcrumb
 
 function  PushBreadcrumb() {
     #//     Example1:
@@ -738,9 +742,13 @@ function  TestError() {
 ErrorCount=0
 LastErrorMessage=""
 
+#section: String
+
 function  EscapeRegularExpression() {
     echo "$1" | sed -E 's/([$^.*+?\(){}|\/[])/\\\1/g' | sed -E 's/]/\\]/g'
 }
+
+#section: Process
 
 function  RunWithEcho() {
     echo  "$ $( GetArgumentsString  "$@" )"  >&2
@@ -764,6 +772,8 @@ function  GetArgumentsString() {
 
     echo  "${arguments:1}"
 }
+
+#section: Test
 
 function  ShouldRunTest() {
     local  thisTest="$1"
@@ -789,6 +799,8 @@ function  TestOptionIsValid() {
         false
     fi
 }
+
+#section: Debug
 
 # pp
 #     Debug print
