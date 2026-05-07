@@ -375,6 +375,13 @@ function  PushBreadcrumb() {
     if ! [[ -v ParentPIDLabel ]]; then  ParentPIDLabel=""  ;fi
     if ! [[ -v Options_StartAtSubJob ]]; then  Options_StartAtSubJob=""  ;fi
     if ! [[ -v Options_SilentBreadcrumb ]]; then  Options_SilentBreadcrumb=""  ;fi
+    if ! [[ -v SilentBreadcrumb ]]; then
+        if [ "${Options_SilentBreadcrumb}" == "" ]; then
+            SilentBreadcrumb="false"
+        else
+            SilentBreadcrumb="true"
+        fi
+    fi
     if [ "${HasStartedFlag}" == "" ]; then
         #// Old specification warning
         if [ "${ParentBreadcrumb}" != ""  -a  "${RootBreadcrumb}" == "" ]; then
@@ -387,7 +394,7 @@ function  PushBreadcrumb() {
 
     SetStartAt
 
-    if [ "${Options_SilentBreadcrumb}" == "" ]; then
+    if [ "${SilentBreadcrumb}" == "false" ]; then
         echo  "#breadcrumb: ${dateTime}$( OnEachBreadcrumb ) $( GetCodePosition 1 ) (PID=$$${ParentPIDLabel}) ${ParentProcessBreadcrumb}${CurrentBreadcrumb}"
     fi
     test  "${breadcrumb:0:4}" == " >> "  ||  Error  "ERROR: bad breadcrumb \"${breadcrumb}\" in PushBreadcrumb."
@@ -440,7 +447,7 @@ function  PopBreadcrumb() {
     ParentBreadcrumb="$( echo  "${ParentBreadcrumb}"  |  sed -E  "s^(.*)${breadcrumbPattern}"'.*^\1^' )"
     CurrentBreadcrumb="${ParentBreadcrumb}"  #// This is also changed by SetBreadcrumb function
 
-    if [ "${Options_SilentBreadcrumb}" == "" ]; then
+    if [ "${SilentBreadcrumb}" == "false" ]; then
         echo  "#breadcrumb: ${dateTime}$( OnEachBreadcrumb ) $( GetCodePosition 1 ) (PID=$$${ParentPIDLabel}) ${ParentProcessBreadcrumb}${CurrentBreadcrumb}${breadcrumb} (end)"
     fi
     if [ "${HasStartedFlag}" == "true" ]; then
@@ -451,12 +458,16 @@ function  PopBreadcrumb() {
         local  notFoundBreadCrumb="${StartAt%%${tab}*}"  #// left of "${tab}"
         local  startAtOption="$( echo "${Options_StartAt}"  |  sed "s/->>/>>/g" )"
         local  mainBreadcrumb="$( echo "${startAtOption}"  |  sed "s/^ >> //"  |  sed "s/ *>>.*//" )"
+        local  currentStartAt="$( echo "${StartAt}"  |  sed -E "s/${tab}/ >> /" )"
+        local  thisProcessStartAt="$( echo "${Options_StartAt}"  |  sed -E "s/.*->> +//"  |  sed -E "s/ *>> */ >> /" )"
 
-        local  errorMessage="ERROR: Breadcrumb \"${notFoundBreadCrumb}\" in --start-at \"${startAtOption}\" is not matched with any PushBreadcrumb parameter."
+        local  errorMessage="ERROR: Breadcrumb \"${notFoundBreadCrumb}\" in --start-at \"${startAtOption}\" is not matched with any PushBreadcrumb parameter or same name was REPEATED in parent breadcrumb."
         if [ "${notFoundBreadCrumb}" == "${mainBreadcrumb}" ]; then
             errorMessage="${errorMessage} Not supported --start-at option, if \"${notFoundBreadCrumb}\" is main breadcrumb. Please add root breadcrumb."
         fi
-        Error  "${errorMessage}"
+        if [ "${ParentPIDLabel}" == "" ] || [ "${currentStartAt}" != "${thisProcessStartAt}" ]; then  #// If root process or first breadcrumb was matched
+            Error  "${errorMessage}"
+        fi
     fi
     if [ "${StepMode}" != "" ] || [ "${StepAfterMode}" != "" ]; then
         if [ "${HasStartedFlag}" == "true" ]; then
@@ -475,6 +486,18 @@ function  SetBreadcrumb() {
     echo  "#breadcrumb: ${dateTime} $( GetCodePosition 1 ) (PID=$$${ParentPIDLabel}) ${ParentProcessBreadcrumb}${CurrentBreadcrumb}$( OnEachBreadcrumb )"
     SetStartAt
 }
+
+#// Add the following code at option parser
+    #// Standard:
+    #//    --start-at)   Options_StartAt="$2"; shift; shift;;
+    #//    --step)       Options_Step="yes"; shift;;
+    #//    --step-after) Options_StepAfter="yes"; shift;;
+    #//    --parent)     Options_Parent="$2"; ParentPIDLabel=", ParentPID=${Options_Parent}"; shift; shift;;  #// Parent script PID. Not ${PPID}
+    #// With Options_AllArguments:
+    #//    --start-at)   Options_StartAt="$2"; Options_AllArguments+=("$2"); shift; shift;;
+    #//    --step)       Options_Step="yes"; shift;;
+    #//    --step-after) Options_StepAfter="yes"; shift;;
+    #//    --parent)     Options_Parent="$2"; ParentPIDLabel=", ParentPID=${Options_Parent}"; Options_AllArguments+=("$2"); shift; shift;;  #// Parent script PID. Not ${PPID}
 
 function  SetStartAt() {
     local  tab=$'\t'
@@ -645,6 +668,10 @@ function  OnEachBreadcrumb() {
     fi
 }
 
+function  StartBreadcrumbStepExecution() {
+    StepMode="yes"
+}
+
 function  StepPrompt() {
     if [ "${StepMode}" != ""  -o  "${StepAfterMode}" != "" ]; then
         if ! [[ -v _Dbg_DEBUGGER_LEVEL ]]; then  _Dbg_DEBUGGER_LEVEL=""  ;fi  #// Set default values. "! -v" means that variable is not defined.
@@ -677,8 +704,9 @@ function  StepPrompt() {
 function  EchoTestResultBreadcrumb() {
     #// Example:
     #//     test  "${exitCode}" == 0;  EchoTestResultBreadcrumb  #// See pass condition in __FunctionName__ function.
-    #//     EchoTestResultBreadcrumb  "Pass."
+    #//     EchoTestResultBreadcrumb  "Pass."  #// ErrorCount variable is NOT incrementing
     #//     EchoTestResultBreadcrumb  "ERROR: __Message__."
+    #//     EchoTestResultBreadcrumb  "Skip: __Message__."  #// SkipCount variable is incrementing
     #//     EchoTestResultBreadcrumb  "$?"
     #//     EchoEndOfTest
     local  exitCode="$?"
@@ -695,10 +723,12 @@ function  EchoTestResultBreadcrumb() {
             local  message="ERROR: Exit code = ${exitCode}"
         fi
     fi
+    local  fullMessage="$( EchoWithBreadcrumb  "${message}"  "${dateTime}" )"
 
     if echo "${message}"  |  grep 'Pass\.' > /dev/null; then
-        local  fullMessage="$( EchoWithBreadcrumb  "${message}"  "${dateTime}" )"
         echo  "${fullMessage}"
+    elif echo "${message}"  |  grep 'Skip:' > /dev/null; then
+        SkipEcho  "${fullMessage}"
     else
         local  fullMessage="$( EchoWithBreadcrumb  "${message}"  "${dateTime}"  --error )"
         TestError  "${message}"  "${dateTime}"
