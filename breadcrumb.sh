@@ -462,6 +462,15 @@ function  PopBreadcrumb() {
         local  thisProcessStartAt="$( echo "${Options_StartAt}"  |  sed -E "s/.*->> +//"  |  sed -E "s/ *>> */ >> /" )"
 
         local  errorMessage="ERROR: Breadcrumb \"${notFoundBreadCrumb}\" in --start-at \"${startAtOption}\" is not matched with any PushBreadcrumb parameter or same name was REPEATED in parent breadcrumb."
+        local  breadcrumb0
+        echo  ""
+        echo  "SkippedBreadcrumb:"
+        for breadcrumb0 in  "${SkippedBreadcrumb[@]}" ;do     #// for elem in  ( "ABC" "DEF" "GHI" ) ;do とは書けません
+            echo  "    \"${breadcrumb0}\""
+        done
+        echo  "ExpectedBreadcrumb:"
+        echo  "    \"${StartAt}\""  |  sed  "s/${tab}.*/\"/"
+        echo  ""
         if [ "${notFoundBreadCrumb}" == "${mainBreadcrumb}" ]; then
             errorMessage="${errorMessage} Not supported --start-at option, if \"${notFoundBreadCrumb}\" is main breadcrumb. Please add root breadcrumb."
         fi
@@ -523,6 +532,7 @@ function  SetStartAt() {
         fi
         StepMode="${Options_Step}"
         StepAfterMode="${Options_StepAfter}"
+        SkippedBreadcrumb=()
 
         StartAt="$( echo  "${currentProcessStartAt}"  |  sed  "s/ >> /${tab}/g" )"
         if [ "${StartAt:0:1}" == "${tab}" ]; then
@@ -532,7 +542,7 @@ function  SetStartAt() {
 
     #// Update "HasStartedFlag"
     if [ "${HasStartedFlag}" == "false" ] || [ "${StartAt}" != "" ]; then
-        local  startAt0="${StartAt%%${tab}*}"
+        local  startAt0="${StartAt%%${tab}*}"  #// left of "${tab}"
 
         if echo  "${CurrentBreadcrumb}"  |  grep -F "${startAt0}" > /dev/null; then  #// "Options_StartAt" and "startAt0" are NOT regular expression.
 
@@ -543,7 +553,8 @@ function  SetStartAt() {
             else
                 StartAt="${nextStartAt}"
             fi
-            echo  "#breadcrumb:  Step in ${startAt0} (PID=$$${ParentPIDLabel})"
+            echo  "#breadcrumb: --start-at step in: ${startAt0}"
+            SkippedBreadcrumb=()
         else
             HasStartedFlag="false"
         fi
@@ -617,7 +628,10 @@ function  HasStarted() {
     test  "${HasStartedFlag}" != ""  ||  Error  "ERROR: PushBreadcrumb or SetBreadcrumb is not called yet."
     local  tab=$'\t'
     if [ "${HasStartedFlag}" == "false" ]; then
-        echo  "#breadcrumb: Skipped until ${StartAt} (PID=$$${ParentPIDLabel})"  |  sed  "s/${tab}/ >> /g"
+        local  currentBreadcrumb0="$( echo "${CurrentBreadcrumb}"  |  sed  "s/.* >> //" )"
+        echo  "#breadcrumb: --start-at skipped: ${currentBreadcrumb0}"
+        echo  "#breadcrumb: --start-at skips until: ${StartAt}"  |  sed  "s/${tab}.*//"
+        SkippedBreadcrumb+=( "${currentBreadcrumb0}" )
     fi
     test  "${HasStartedFlag}" == "true"
     return  $?
@@ -637,6 +651,12 @@ function  EchoWithBreadcrumb() {
     if [ "${dateTime}" == "" ]; then
         local  dateTime="$( date +"%Y-%m-%dT%H:%M:%S.%N%z" )"
     fi
+    if ! [[ -v HasStartedFlag ]]; then  HasStartedFlag=""  ;fi  #// Set default values. "! -v" means that variable is not defined.
+    if [ "${HasStartedFlag}" == "" ]; then
+        echo  "${message}"
+        return
+    fi
+
     if [ "${ParentProcessBreadcrumb}${CurrentBreadcrumb}" == "" ]; then
         local  breadcrumb=""
     else
