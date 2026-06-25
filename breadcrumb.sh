@@ -728,7 +728,8 @@ function  EchoTestResultBreadcrumb() {
     #//     EchoTestResultBreadcrumb  "ERROR: __Message__."
     #//     EchoTestResultBreadcrumb  "Skip: __Message__."  #// SkipCount variable is incrementing
     #//     EchoTestResultBreadcrumb  "$?"
-    #//     EchoEndOfTest
+    #//     EchoEndOfTest  |  tee "${TestSummaryFile}"
+    #//     return  $( GetFirstNonZeroValue "${PIPESTATUS[@]}" )
     local  exitCode="$?"
     local  message="${1-""}"  #// "${1-""}" means that "$1" default is "".
     local  dateTime="$( date +"%Y-%m-%dT%H:%M:%S.%N%z" )"
@@ -763,17 +764,23 @@ function  EchoEndOfTest() {
     EchoWithBreadcrumb  ""
     echo  ""
     echo  "EchoEndOfTest: Test Summary ----------------------------------------------------"
+    echo  "Current Git branch: $( GetCurrentGitBranch )"
     for message in "${TestResults[@]}";do
         echo  "${message}"
     done
     echo  ""
+    if ! [[ -v SkipCount ]]; then  SkipCount=0  ;fi  #// Set default values. "! -v" means that variable is not defined.
 
     EchoWithBreadcrumb  "ErrorCount: ${ErrorCount}"
+    if [ "${SkipCount}" != 0 ]; then
+        EchoWithBreadcrumb  "SkipCount: ${SkipCount}"
+    fi
     if [ "${ErrorCount}" == 0 ]; then
         EchoWithBreadcrumb  "Pass."
     else
         EchoEndOfTestMessage
     fi
+    test  "${ErrorCount}" == 0  #// return
 }
 
 function  TestError() {
