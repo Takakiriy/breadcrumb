@@ -647,13 +647,13 @@ function  EchoWithBreadcrumb() {
     #//         Pass.  #breadcrumb: 2023-10-10T11:11:22.789456145+0900 ./example.sh:122 /home/user1/this-script.sh >> Start
     local  message="$1"
     local  dateTime="${2-""}"  #// "${1-""}" means that "$1" default is "".
-    local  errorOption="${3-""}"  #// Optional. "" or "--error".  "${1-""}" means that "$1" default is "".
+    local  errorOption="${3-""}"  #// Optional. "" or "--error". See "Error" or "TestError" function. "${1-""}" means that "$1" default is "".
     if [ "${dateTime}" == "" ]; then
         local  dateTime="$( date +"%Y-%m-%dT%H:%M:%S.%N%z" )"
     fi
     if ! [[ -v HasStartedFlag ]]; then  HasStartedFlag=""  ;fi  #// Set default values. "! -v" means that variable is not defined.
     if [ "${HasStartedFlag}" == "" ]; then
-        echo  "${message}"
+        echo -e  "${message}"
         return
     fi
 
@@ -668,7 +668,14 @@ function  EchoWithBreadcrumb() {
             parentProcessOf="(parent process of)"
         fi
         if [ "${errorOption}" == "--error" ]; then
-            local  breadcrumb=" To continue, input the command like: ${parentProcessOf}${commandPath} __OtherOptions__  --start-at \"${startAtOption}\""
+            local  linkToRunbook=""
+            if declare -f ShowLinkToRunbook > /dev/null 2>&1; then
+                linkToRunbook="$( ShowLinkToRunbook )"
+                if [ "${linkToRunbook}" != "" ]; then
+                    linkToRunbook=$'\n'"${linkToRunbook}"$'\n'"    "
+                fi
+            fi
+            local  breadcrumb=" ${linkToRunbook}To continue after fix, input the command like: ${parentProcessOf}${commandPath} __OtherOptions__  --start-at \"${startAtOption}\""
         else
             local  breadcrumb=" ${parentProcessOf}${ParentProcessBreadcrumb}${CurrentBreadcrumb}"
         fi
@@ -677,7 +684,7 @@ function  EchoWithBreadcrumb() {
         local  message="${message}  "
     fi
 
-    echo  "${message}#breadcrumb: ${dateTime} $( GetCodePosition 1 ) (PID=$$${ParentPIDLabel})${breadcrumb}$( OnEachBreadcrumb )"
+    echo -e  "${message}#breadcrumb: ${dateTime} $( GetCodePosition 1 ) (PID=$$${ParentPIDLabel})${breadcrumb}$( OnEachBreadcrumb )"
 }
 
 function  OnEachBreadcrumb() {
@@ -858,6 +865,14 @@ function  TestOptionIsValid() {
 }
 
 #section: Debug
+
+function  ShowLinkToRunbook() {
+    if echo "${CurrentBreadcrumb}" | grep " >> AnsiblePlaybook" > /dev/null; then
+        echo  "    To log in Ansible control host and fix the problem, #search: ansible command  #ref: ~/project/README.yaml"
+        echo  "        e.g.) code --remote ssh-remote+vm-local-${hostNumber}  home/user1/ansible"
+        echo  "    To log in Ansible target host, #search: ansible target  #ref: ~/project/README.yaml"
+    fi
+}
 
 # pp
 #     Debug print
