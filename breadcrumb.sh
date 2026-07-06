@@ -461,7 +461,7 @@ function  PopBreadcrumb() {
         local  currentStartAt="$( echo "${StartAt}"  |  sed -E "s/${tab}/ >> /" )"
         local  thisProcessStartAt="$( echo "${Options_StartAt}"  |  sed -E "s/.*->> +//"  |  sed -E "s/ *>> */ >> /" )"
 
-        local  errorMessage="ERROR: Breadcrumb \"${notFoundBreadCrumb}\" in --start-at \"${startAtOption}\" is not matched with any PushBreadcrumb parameter or same name was REPEATED in parent breadcrumb."
+        local  errorMessage="ERROR: Breadcrumb \"${notFoundBreadCrumb}\" in --start-at '${startAtOption}' is not matched with any PushBreadcrumb parameter or same name was REPEATED in parent breadcrumb."
         local  breadcrumb0
         echo  ""
         echo  "SkippedBreadcrumb:"
@@ -602,7 +602,7 @@ function  GetStepOptions() {
 
 function  GetSubJobStartAtOption() {
     if [ "${Options_StartAtSubJob}" != "" ]; then
-        echo  "--start-at \"${Options_StartAtSubJob}\""
+        echo  "--start-at '${Options_StartAtSubJob}'"
     else
         echo  ""
     fi
