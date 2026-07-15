@@ -395,7 +395,12 @@ function  PushBreadcrumb() {
     SetStartAt
 
     if [ "${SilentBreadcrumb}" == "false" ]; then
-        echo  "#breadcrumb: ${dateTime}$( OnEachBreadcrumb ) $( GetCodePosition 1 ) (PID=$$${ParentPIDLabel}) ${ParentProcessBreadcrumb}${CurrentBreadcrumb}"
+        local  parentProcessOf=""
+        if [ "${ParentPIDLabel}" != "" ]; then
+            parentProcessOf="(parent process of)"
+        fi
+
+        echo  "#breadcrumb: ${dateTime}$( OnEachBreadcrumb ) $( GetCodePosition 1 ) (PID=$$${ParentPIDLabel}) ${parentProcessOf}${ParentProcessBreadcrumb}${CurrentBreadcrumb}"
     fi
     test  "${breadcrumb:0:4}" == " >> "  ||  Error  "ERROR: bad breadcrumb \"${breadcrumb}\" in PushBreadcrumb."
     if [ "$( echo "${breadcrumb:4}"  |  grep -E ' >> ' )" != "" ]; then
@@ -448,7 +453,12 @@ function  PopBreadcrumb() {
     CurrentBreadcrumb="${ParentBreadcrumb}"  #// This is also changed by SetBreadcrumb function
 
     if [ "${SilentBreadcrumb}" == "false" ]; then
-        echo  "#breadcrumb: ${dateTime}$( OnEachBreadcrumb ) $( GetCodePosition 1 ) (PID=$$${ParentPIDLabel}) ${ParentProcessBreadcrumb}${CurrentBreadcrumb}${breadcrumb} (end)"
+        local  parentProcessOf=""
+        if [ "${ParentPIDLabel}" != "" ]; then
+            parentProcessOf="(parent process of)"
+        fi
+
+        echo  "#breadcrumb: ${dateTime}$( OnEachBreadcrumb ) $( GetCodePosition 1 ) (PID=$$${ParentPIDLabel}) ${parentProcessOf}${ParentProcessBreadcrumb}${CurrentBreadcrumb}${breadcrumb} (end)"
     fi
     if [ "${HasStartedFlag}" == "true" ]; then
         StartAt=""
@@ -520,6 +530,9 @@ function  SetStartAt() {
         fi
         if echo "${startAt}"  |  grep  "\->>" > /dev/null; then  #// "\" in "\-->" escape character. If --start-at option contains "->>".
             ParentProcessBreadcrumb="${RootBreadcrumb}$( echo "${startAt}"  |  sed -E 's/^(.*)->>.*$/\1/'  |  sed -E 's/ *$//' )"
+            if [ "${ParentPIDLabel}" == "" ]; then
+                ParentPIDLabel=", Parent=true"
+            fi
         else
             ParentProcessBreadcrumb="${RootBreadcrumb}"
         fi
