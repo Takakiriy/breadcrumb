@@ -713,7 +713,8 @@ function  StartBreadcrumbStepExecution() {
 }
 
 function  StepPrompt() {
-    if [ "${StepMode}" != ""  -o  "${StepAfterMode}" != "" ]; then
+    #// Step mode can be used by the option "--step", "--step-after" or calling StartBreadcrumbStepExecution
+    if [ "${StepMode}" != "" ] || [ "${StepAfterMode}" != "" ]; then
         if ! [[ -v _Dbg_DEBUGGER_LEVEL ]]; then  _Dbg_DEBUGGER_LEVEL=""  ;fi  #// Set default values. "! -v" means that variable is not defined.
         if [ "${_Dbg_DEBUGGER_LEVEL}" != "" ]; then
             echo  "WARNING: --step option is disabled, because debugger will stop, when keyoboard input."
@@ -726,9 +727,9 @@ function  StepPrompt() {
                 read  -p "(N)o/(y)es/(c)ontinue: "  key_
             done
 
-            if [ "${key_}" == "n"  -o  "${key_}" == "N" ]; then
+            if [ "${key_}" == "n" ] || [ "${key_}" == "N" ]; then
                 Error  "User exit."
-            elif [ "${key_}" == "c"  -o  "${key_}" == "C" ]; then
+            elif [ "${key_}" == "c" ] || [ "${key_}" == "C" ]; then
                 StepMode=""
                 StepAfterMode=""
             else
