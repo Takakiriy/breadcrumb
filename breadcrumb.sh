@@ -746,8 +746,8 @@ function  EchoTestResultBreadcrumb() {
     #// Example:
     #//     test  "${exitCode}" == 0;  EchoTestResultBreadcrumb  #// See pass condition in __FunctionName__ function.
     #//     EchoTestResultBreadcrumb  "Pass."  #// ErrorCount variable is NOT incrementing
-    #//     EchoTestResultBreadcrumb  "ERROR: __Message__."
-    #//     EchoTestResultBreadcrumb  "Skip: __Message__."  #// SkipCount variable is incrementing
+    #//     EchoTestResultBreadcrumb  "ERROR: __Message__."  > >( tee -a "${TestSummaryFile}" )
+    #//     EchoTestResultBreadcrumb  "Skip: __Message__."  > >( tee -a "${TestSummaryFile}" )  #// SkipCount variable is incrementing
     #//     EchoTestResultBreadcrumb  "$?"
     #//     EchoEndOfTest  |  tee "${TestSummaryFile}"
     #//     return  $( GetFirstNonZeroValue "${PIPESTATUS[@]}" )
