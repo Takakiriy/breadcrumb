@@ -37,7 +37,7 @@ ThisScriptName="./breadcrumb.sh"
 # RootBreadcrumb="${ThisScriptFullPath}"
 RootBreadcrumb="${ThisScriptName}"  #// In old specification, ParentBreadcrumb instead of RootBreadcrumb.
 
-#section: Main
+#region: Main
 
 function  Main() {
     if [ "${Options_List}" != "" ]; then
@@ -347,7 +347,9 @@ function  StartAtTargetC() {
     fi
 }
 
-#section: Breadcrumb
+#endregion:
+
+#region: Breadcrumb
 
 function  PushBreadcrumb() {
     #//     Example1:
@@ -384,7 +386,7 @@ function  PushBreadcrumb() {
     fi
     if [ "${HasStartedFlag}" == "" ]; then
         #// Old specification warning
-        if [ "${ParentBreadcrumb}" != ""  -a  "${RootBreadcrumb}" == "" ]; then
+        if [ "${ParentBreadcrumb}" != "" ] && [ "${RootBreadcrumb}" == "" ]; then
             echo  "WARNING: In new version, set RootBreadcrumb to old version ParentBreadcrumb initial value."
         fi
     fi
@@ -399,8 +401,9 @@ function  PushBreadcrumb() {
         if [ "${ParentPIDLabel}" != "" ]; then
             parentProcessOf="(parent process of)"
         fi
+        local  breadcrumbLeaf="${CurrentBreadcrumb##* >> }"  #// right of last " >> "
 
-        echo  "#breadcrumb: ${dateTime}$( OnEachBreadcrumb ) $( GetCodePosition 1 ) (PID=$$${ParentPIDLabel}) ${parentProcessOf}${ParentProcessBreadcrumb}${CurrentBreadcrumb}"
+        echo  "#region: \"${breadcrumbLeaf}\" #breadcrumb: ${dateTime}$( OnEachBreadcrumb ) $( GetCodePosition 1 ) (PID=$$${ParentPIDLabel}) ${parentProcessOf}${ParentProcessBreadcrumb}${CurrentBreadcrumb}"
     fi
     test  "${breadcrumb:0:4}" == " >> "  ||  Error  "ERROR: bad breadcrumb \"${breadcrumb}\" in PushBreadcrumb."
     if [ "$( echo "${breadcrumb:4}"  |  grep -E ' >> ' )" != "" ]; then
@@ -457,8 +460,9 @@ function  PopBreadcrumb() {
         if [ "${ParentPIDLabel}" != "" ]; then
             parentProcessOf="(parent process of)"
         fi
+        local  breadcrumbLeaf="${breadcrumb##* >> }"  #// right of last " >> "
 
-        echo  "#breadcrumb: ${dateTime}$( OnEachBreadcrumb ) $( GetCodePosition 1 ) (PID=$$${ParentPIDLabel}) ${parentProcessOf}${ParentProcessBreadcrumb}${CurrentBreadcrumb}${breadcrumb} (end)"
+        echo  "#endregion: \"${breadcrumbLeaf}\" #breadcrumb: ${dateTime}$( OnEachBreadcrumb ) $( GetCodePosition 1 ) (PID=$$${ParentPIDLabel}) ${parentProcessOf}${ParentProcessBreadcrumb}${CurrentBreadcrumb}${breadcrumb} (end)"
     fi
     if [ "${HasStartedFlag}" == "true" ]; then
         StartAt=""
@@ -474,12 +478,12 @@ function  PopBreadcrumb() {
         local  errorMessage="ERROR: Breadcrumb \"${notFoundBreadCrumb}\" in --start-at '${startAtOption}' is not matched with any PushBreadcrumb parameter or same name was REPEATED in parent breadcrumb."
         local  breadcrumb0
         echo  ""
-        echo  "SkippedBreadcrumb:"
-        for breadcrumb0 in  "${SkippedBreadcrumb[@]}" ;do     #// for elem in  ( "ABC" "DEF" "GHI" ) ;do とは書けません
-            echo  "    \"${breadcrumb0}\""
-        done
         echo  "ExpectedBreadcrumb:"
         echo  "    \"${StartAt}\""  |  sed  "s/${tab}.*/\"/"
+        echo  "NotMatchedBreadcrumb:"
+        for breadcrumb0 in  "${NotMatchedBreadcrumb[@]}" ;do     #// for elem in  ( "ABC" "DEF" "GHI" ) ;do とは書けません
+            echo  "    \"${breadcrumb0}\""
+        done
         echo  ""
         if [ "${notFoundBreadCrumb}" == "${mainBreadcrumb}" ]; then
             errorMessage="${errorMessage} Not supported --start-at option, if \"${notFoundBreadCrumb}\" is main breadcrumb. Please add root breadcrumb."
@@ -545,7 +549,7 @@ function  SetStartAt() {
         fi
         StepMode="${Options_Step}"
         StepAfterMode="${Options_StepAfter}"
-        SkippedBreadcrumb=()
+        NotMatchedBreadcrumb=()
 
         StartAt="$( echo  "${currentProcessStartAt}"  |  sed  "s/ >> /${tab}/g" )"
         if [ "${StartAt:0:1}" == "${tab}" ]; then
@@ -567,7 +571,7 @@ function  SetStartAt() {
                 StartAt="${nextStartAt}"
             fi
             echo  "#breadcrumb: --start-at step in: ${startAt0}"
-            SkippedBreadcrumb=()
+            NotMatchedBreadcrumb=()
         else
             HasStartedFlag="false"
         fi
@@ -644,7 +648,7 @@ function  HasStarted() {
         local  currentBreadcrumb0="$( echo "${CurrentBreadcrumb}"  |  sed  "s/.* >> //" )"
         echo  "#breadcrumb: --start-at skipped: ${currentBreadcrumb0}"
         echo  "#breadcrumb: --start-at skips until: ${StartAt}"  |  sed  "s/${tab}.*//"
-        SkippedBreadcrumb+=( "${currentBreadcrumb0}" )
+        NotMatchedBreadcrumb+=( "${currentBreadcrumb0}" )
     fi
     test  "${HasStartedFlag}" == "true"
     return  $?
@@ -820,13 +824,17 @@ function  TestError() {
 ErrorCount=0
 LastErrorMessage=""
 
-#section: String
+#endregion:
+
+#region: String
 
 function  EscapeRegularExpression() {
     echo "$1" | sed -E 's/([$^.*+?\(){}|\/[])/\\\1/g' | sed -E 's/]/\\]/g'
 }
 
-#section: Process
+#endregion:
+
+#region: Process
 
 function  RunWithEcho() {
     echo  "$ $( GetArgumentsString  "$@" )"  >&2
@@ -851,7 +859,9 @@ function  GetArgumentsString() {
     echo  "${arguments:1}"
 }
 
-#section: Test
+#endregion:
+
+#region: Test
 
 function  ShouldRunTest() {
     local  thisTest="$1"
@@ -878,7 +888,9 @@ function  TestOptionIsValid() {
     fi
 }
 
-#section: Debug
+#endregion:
+
+#region: Debug
 
 function  ShowLinkToRunbook() {
     if echo "${CurrentBreadcrumb}" | grep " >> AnsiblePlaybook" > /dev/null; then
@@ -941,6 +953,8 @@ function  pp() {
         echo  "@@@${variableName}? ---------------------------"  >&2
     fi
 }
+
+#endregion:
 
 function  Error() {
     local  errorMessage="$1"
