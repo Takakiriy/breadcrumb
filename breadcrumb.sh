@@ -329,7 +329,7 @@ function  EchoTestOfStartAtOption() {
         options="${options}  --start-at-sub-job \"${startAtSubJobOption}\""
     fi
 
-    echo  "******* Test of --start-at \"${startAtOption}\"${options}"
+    echo  "******* Test of --start-at '${startAtOption}'${options}"
 }
 
 function  EchoEndOfTestMessage() {
@@ -692,7 +692,7 @@ function  EchoWithBreadcrumb() {
                     linkToRunbook=$'\n'"${linkToRunbook}"$'\n'"    "
                 fi
             fi
-            local  breadcrumb=" ${linkToRunbook}To continue after fix, input the command like: ${parentProcessOf}${commandPath} __OtherOptions__  --start-at \"${startAtOption}\""
+            local  breadcrumb=" ${linkToRunbook}To continue after fix, input the command like: ${parentProcessOf}${commandPath} __OtherOptions__  --start-at '${startAtOption}'"
         else
             local  breadcrumb=" ${parentProcessOf}${ParentProcessBreadcrumb}${CurrentBreadcrumb}"
         fi
