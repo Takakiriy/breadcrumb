@@ -516,11 +516,6 @@ function  SetBreadcrumb() {
     #//    --step)       Options_Step="yes"; shift;;
     #//    --step-after) Options_StepAfter="yes"; shift;;
     #//    --parent)     Options_Parent="$2"; ParentPIDLabel=", ParentPID=${Options_Parent}"; shift; shift;;  #// Parent script PID. Not ${PPID}
-    #// With Options_AllArguments:
-    #//    --start-at)   Options_StartAt="$2"; Options_AllArguments+=("$2"); shift; shift;;
-    #//    --step)       Options_Step="yes"; shift;;
-    #//    --step-after) Options_StepAfter="yes"; shift;;
-    #//    --parent)     Options_Parent="$2"; ParentPIDLabel=", ParentPID=${Options_Parent}"; Options_AllArguments+=("$2"); shift; shift;;  #// Parent script PID. Not ${PPID}
 
 function  SetStartAt() {
     local  tab=$'\t'
